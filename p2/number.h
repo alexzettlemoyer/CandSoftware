@@ -10,3 +10,7 @@
 /** Max and Min for char values of Base 25 characters [A-P]*/
 #define BASE_25_MIN 65
 #define BASE_25_MAX 80
+
+int skipSpace();
+long parseValue();
+void printValue( long val );
