@@ -50,7 +50,6 @@ int main()
 			value += plus(val1, val2);
 		if (operator == '-')
 			value += minus(val1, val2);
-	
 	}
 	printValue(value);
 	return 0;
