@@ -2,8 +2,10 @@
 	@file operation.c
 	@author Alex Zettlemoyer
 */
-#include number.h
-#include operation.h
+#include "number.h"
+#include "operation.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 long plus( long a, long b )
 {
@@ -34,10 +36,19 @@ long minus( long a, long b )
 	if (result < LONG_MIN || result > LONG_MAX) {
 		exit(FAIL_RANGE);
 	}
+	
+	return result;
 }
 
 long times( long a, long b )
 {
+	long result = a * b;
+	
+	if (result < LONG_MIN || result > LONG_MAX) {
+		exit(FAIL_RANGE);
+	}
+	
+	return result;
 }
 
 long divide( long a, long b )
@@ -53,4 +64,5 @@ long divide( long a, long b )
 		exit(FAIL_RANGE);
 	}
 	
+	return result;
 }

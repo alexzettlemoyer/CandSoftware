@@ -2,7 +2,8 @@
 	@file number25.c
 	@author Alex Zettlemoyer
 */
-#include number.h
+#include <number.h>
+#include <stdio.h>
 
 int skipSpace()
 {

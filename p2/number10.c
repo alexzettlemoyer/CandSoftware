@@ -2,7 +2,8 @@
 	@file number10.c
 	@author Alex Zettlemoyer
 */
-#include number.h
+#include "number.h"
+#include <stdio.h>
 
 /**
 	skipSpace
@@ -14,7 +15,7 @@ int skipSpace()
 {
 	char ch;
 	
-	while (scanf("%c", &ch) != 0) {
+	while (scanf("%c", &ch) == 1) {
 	
 		if (ch != ' ') {
 			if (ch == EOF) {
@@ -25,7 +26,8 @@ int skipSpace()
 			}
 			return ch;
 		}
-	}	
+	}
+	return EOF;	
 }
 
 /**
@@ -35,22 +37,27 @@ int skipSpace()
 */
 long parseValue()
 {
-	char ch = skipSpace();
+	int charVal = skipSpace();
+	int numVal;
 	long value = 0;
 	
 	// while the character is a Base 10 number [0-9]
-	while (BASE_10_MIN <= ch && ch >= BASE_10_MAX) {
+	while (BASE_10_MIN <= charVal && charVal <= BASE_10_MAX) {
+		
+		numVal = charVal - 48;
 		
 		// slide all values over one
 		value *= 10;
 		// add in the new value
-		value += ch;
+		value += numVal;
 		
-		ch = skipSpace();
+		charVal = skipSpace();
 	}
 	
+	char character = charVal;
+	
 	// add back the operator read in
-	unget(ch, stdin);
+	ungetc(character, stdin);
 	return value;
 }
 
@@ -60,5 +67,5 @@ long parseValue()
 */
 void printValue( long val )
 {
-	printf("%ld", val);
+	printf("%ld\n", val);
 }
