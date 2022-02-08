@@ -81,5 +81,5 @@ long parseValue()
 */
 void printValue( long val )
 {
-	printf("%ld\n", val);
+	printf("%ld", val);
 }

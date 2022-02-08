@@ -30,11 +30,6 @@ static long parseTerm()
 			return val1;
 		}
 		
-		// // check if there's another number or if there's another operator
-// 		if (BASE_10_MIN > nextChar || nextChar > BASE_10_MAX) {
-// 			exit(FAIL_INPUT);
-// 		}
-		
 		val2 = parseValue();
 	
 		if (operator == '*')
@@ -80,16 +75,17 @@ int main()
 		val2 = parseTerm();
 		
 		if (operator == '+') {
-// 			printf("%ldplus%ld=", value, val2);
+		//	printf("%ldplus%ld=", value, val2);
 			value = plus(value, val2);
-// 			printf("%ld\n", value);
+		//	printf("%ld\n", value);
 		}
 		else if (operator == '-') {
-// 			printf("%ldminus%ld=", value, val2);
+		//	printf("%ldminus%ld=", value, val2);
 			value = minus(value, val2);
-// 			printf("%ld\n", value);
+		//	printf("%ld\n", value);
 		}
 	}
 	printValue(value);
+	printf("\n");
 	return 0;
 }
