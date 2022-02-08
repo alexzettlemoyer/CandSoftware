@@ -6,6 +6,7 @@
 /** Max and Min for char values of Base 10 characters [0-9]*/
 #define BASE_10_MIN 48
 #define BASE_10_MAX 57
+#define NEGATIVE_CHAR 45
 
 /** Max and Min for char values of Base 25 characters [A-P]*/
 #define BASE_25_MIN 65

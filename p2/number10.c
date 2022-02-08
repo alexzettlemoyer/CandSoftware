@@ -4,6 +4,8 @@
 */
 #include "number.h"
 #include <stdio.h>
+#include <stdlib.h>
+
 
 /**
 	skipSpace
@@ -17,7 +19,7 @@ int skipSpace()
 	
 	while (scanf("%c", &ch) == 1) {
 	
-		if (ch != ' ') {
+		if (ch != ' ' && ch != '\f' && ch != '\t' && ch != '\r' && ch != '\v'){
 			if (ch == EOF) {
 				return EOF;
 			}
@@ -40,10 +42,17 @@ long parseValue()
 	int charVal = skipSpace();
 	int numVal;
 	long value = 0;
+	_Bool negative = 0;
+	
+	// checks if there's a negative before the number
+	if (charVal == NEGATIVE_CHAR) {
+		negative = 1;
+		charVal = skipSpace();
+	}	
 	
 	// while the character is a Base 10 number [0-9]
-	while (BASE_10_MIN <= charVal && charVal <= BASE_10_MAX) {
-		
+	while (BASE_10_MIN <= charVal && charVal <= BASE_10_MAX ) {
+	
 		numVal = charVal - 48;
 		
 		// slide all values over one
@@ -52,6 +61,11 @@ long parseValue()
 		value += numVal;
 		
 		charVal = skipSpace();
+	}
+	
+	// change the number to a negative if it had a '-' char in front
+	if (negative == 1) {
+		value *= -1;
 	}
 	
 	char character = charVal;

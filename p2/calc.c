@@ -66,10 +66,14 @@ int main()
 		val2 = parseTerm();
 		
 		if (operator == '+') {
+// 			printf("%ldplus%ld=", value, val2);
 			value = plus(value, val2);
+// 			printf("%ld\n", value);
 		}
 		else if (operator == '-') {
+// 			printf("%ldminus%ld=", value, val2);
 			value = minus(value, val2);
+// 			printf("%ld\n", value);
 		}
 	}
 	printValue(value);
