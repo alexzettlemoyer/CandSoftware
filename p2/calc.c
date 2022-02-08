@@ -30,6 +30,11 @@ static long parseTerm()
 			return val1;
 		}
 		
+		// // check if there's another number or if there's another operator
+// 		if (BASE_10_MIN > nextChar || nextChar > BASE_10_MAX) {
+// 			exit(FAIL_INPUT);
+// 		}
+		
 		val2 = parseValue();
 	
 		if (operator == '*')
@@ -53,6 +58,7 @@ int main()
 {
 	long val2 = 0;
 	char operator = ' ';
+	int nextChar;
 	long value = parseTerm();
 	
 	while (operator != EOF && operator != '\n') {
@@ -62,6 +68,14 @@ int main()
 		if (operator == EOF || operator == '\n') {
 			break;
 		}
+		
+		// look at the next character
+		nextChar = skipSpace();
+		// check that the next character isn't an operator
+		if ( nextChar == '+'|| nextChar == '*' || nextChar == '/')
+			exit(FAIL_INPUT);
+		// put it back into the inputStream if it wasn't
+		ungetc(nextChar, stdin);
 
 		val2 = parseTerm();
 		
