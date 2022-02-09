@@ -20,11 +20,15 @@ int skipSpace()
 	while (scanf("%c", &ch) == 1) {
 	
 		if (ch != ' ' && ch != '\f' && ch != '\t' && ch != '\r' && ch != '\v'){
+			
 			if (ch == EOF) {
 				return EOF;
 			}
 			if (ch == '\n') {
 				return '\n';
+			}
+			if (BASE_10_MIN > ch && ch > BASE_10_MAX) {
+				exit(FAIL_INPUT);
 			}
 			return ch;
 		}

@@ -27,6 +27,12 @@ int skipSpace()
 			if (ch == '\n') {
 				return '\n';
 			}
+			if (!((BASE_10_MIN <= ch && ch <= BASE_10_MAX) ||
+					(BASE_25_MIN <= ch && ch <= BASE_25_MAX) 
+					|| ch == '-' || ch == '+' || ch == '/' || ch == '*')) {
+				exit(FAIL_INPUT);
+			}
+					
 			return ch;
 		}
 	}
@@ -61,9 +67,9 @@ long parseValue()
 		else
 			numVal = charVal - 55;
 		
-		
 		// slide all values over one
 		value = times(value, 25);
+				
 		// add in the new value
 		value = plus(value, numVal);
 		
@@ -79,6 +85,7 @@ long parseValue()
 	
 	// add back the operator read in
 	ungetc(character, stdin);
+	
 	return value;
 }
 

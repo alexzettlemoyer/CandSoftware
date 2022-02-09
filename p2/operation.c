@@ -44,6 +44,19 @@ long times( long a, long b )
 {
 	long result = a * b;
 	
+	// two positives = negative
+	if (a > 0 && b > 0 && result < 0) {
+		exit(FAIL_RANGE);
+	}
+	// two negatives = negative
+	if (a < 0 && b < 0 && result > 0) {
+		exit(FAIL_RANGE);
+	}
+	// 1 negative * 1 positive = positive
+	if ((a < 0 && b > 0 && result > 0) || (a > 0 && b < 0 && result > 0)) {
+		exit(FAIL_RANGE);
+	}
+	
 	if (result < LONG_MIN || result > LONG_MAX) {
 		exit(FAIL_RANGE);
 	}
