@@ -55,9 +55,7 @@ int main()
 	char operator = ' ';
 	int nextChar;
 	long value = parseTerm();
-	
-	plus(368934881476939034, 22);
-	
+		
 	while (operator != EOF && operator != '\n') {
 
 		operator = skipSpace();

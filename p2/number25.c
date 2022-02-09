@@ -91,18 +91,35 @@ long parseValue()
 
 
 /**
-	prints the value as a long integer
+	prints the value as a long integer in Base25
 	@param val the value to print
 */
 void printValue( long val )
 {
 	int digit = 0;
 	char ch;
-	//_Bool negative = 0;
 	
 	if (val < 0) {
+		// print the negative sign
 		printf("%c", '-');
-		printValue(val * -1);
+		
+		// get the next digit on the right
+		digit = val % -25;
+		digit *= -1;
+		
+		// if the digit is [0-9]
+		if (0 <= digit && digit <= 9)
+			ch = (char) digit + 48;
+		else
+			ch = (char) digit + 55;
+	
+		if (val / 25 != 0)
+			printValue(val / -25);
+		
+		printf("%c", ch);
+		
+		// print the rest of the positive version of the value
+		//printValue(val * -1);
 	}	
 	else if (val != 0) {
 		// get the next digit on the right
