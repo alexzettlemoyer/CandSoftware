@@ -1,6 +1,10 @@
 /**
     @file number25.c
     @author Alex Zettlemoyer
+    handles input and output for base25 numbers
+    skipSpace takes input character-by-character
+    parseValue converts the characters to decimal form
+    printValue prints a decimal result value in base25
 */
 #include "number.h"
 #include "operation.h"
@@ -63,12 +67,12 @@ long parseValue()
             
             // if it's a digit  
         if (BASE_10_MIN <= charVal && charVal <= BASE_10_MAX)
-            numVal = charVal - 48;
+            numVal = charVal - BASE_10_MIN;
         else
-            numVal = charVal - 55;
+            numVal = charVal - BASE_25_CHAR_DIFF;
         
         // slide all values over one
-        value = times(value, 25);
+        value = times(value, BASE_25);
                 
         // add in the new value
         value = plus(value, numVal);
@@ -104,17 +108,17 @@ void printValue( long val )
         printf("%c", '-');
         
         // get the next digit on the right
-        digit = val % -25;
+        digit = val % -BASE_25;
         digit *= -1;
         
         // if the digit is [0-9]
-        if (0 <= digit && digit <= 9)
-            ch = (char) digit + 48;
+        if (0 <= digit && digit <= BASE_10_UPPER)
+            ch = (char) digit + BASE_10_MIN;
         else
-            ch = (char) digit + 55;
+            ch = (char) digit + BASE_25_CHAR_DIFF;
     
-        if (val / 25 != 0)
-            printValue(val / -25);
+        if (val / BASE_25 != 0)
+            printValue(val / -BASE_25);
         
         printf("%c", ch);
         
@@ -123,16 +127,16 @@ void printValue( long val )
     }   
     else if (val != 0) {
         // get the next digit on the right
-        digit = val % 25;
+        digit = val % BASE_25;
         
         // if the digit is [0-9]
-        if (0 <= digit && digit <= 9)
-            ch = (char) digit + 48;
+        if (0 <= digit && digit <= BASE_10_UPPER)
+            ch = (char) digit + BASE_10_MIN;
         else
-            ch = (char) digit + 55;
+            ch = (char) digit + BASE_25_CHAR_DIFF;
     
-        if (val / 25 != 0)
-            printValue(val / 25);
+        if (val / BASE_25 != 0)
+            printValue(val / BASE_25);
             
         printf("%c", ch);
     }

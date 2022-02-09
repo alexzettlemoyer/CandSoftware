@@ -1,6 +1,10 @@
 /**
     @file number10.c
     @author Alex Zettlemoyer
+    handles input and output for base10 numbers
+    skipSpace takes input character-by-character
+    parseValue converts the characters to a total decimal number
+    printValue prints a decimal result value in base10
 */
 #include "number.h"
 #include <stdio.h>
@@ -57,10 +61,10 @@ long parseValue()
     // while the character is a Base 10 number [0-9]
     while (BASE_10_MIN <= charVal && charVal <= BASE_10_MAX ) {
     
-        numVal = charVal - 48;
+        numVal = charVal - BASE_10_MIN;
         
         // slide all values over one
-        value *= 10;
+        value *= BASE_10;
         // add in the new value
         value += numVal;
         

@@ -1,12 +1,24 @@
 /**
     @file operation.c
     @author Alex Zettlemoyer
+    contains functions for four arithmetic operations
+    plus, minus, times, and divide
+    checks for overflow in Long int after each operation
 */
 #include "number.h"
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+/**
+    plus
+    adds the two long parameters together
+    checks if the addition caused overflow
+    exits with status 102 if overflow occurred
+    @param a the first value
+    @param b the second value
+    @return the result of the addition
+*/
 long plus( long a, long b )
 {
     long result = a + b;
@@ -23,6 +35,15 @@ long plus( long a, long b )
     return result;
 }
 
+/**
+    minus
+    subtracts second long parameter from first
+    checks if subtraction caused overflow
+    exits with status 102 if overflow occurred
+    @param a the value to be subtracted from
+    @param b the value to subtract
+    @return the result of the subtraction
+*/
 long minus( long a, long b )
 {
     long result = a - b;
@@ -40,6 +61,15 @@ long minus( long a, long b )
     return result;
 }
 
+/**
+    times
+    multiplies the two long parameters together
+    checks if multiplication caused overflow
+    exits with status 102 if overflow occurred
+    @param a the first value
+    @param b the second value
+    @return the result of the multiplication
+*/
 long times( long a, long b )
 {
     long result = a * b;
@@ -64,6 +94,15 @@ long times( long a, long b )
     return result;
 }
 
+/**
+    divide
+    divides first long parameter by the second
+    checks if the divisor is 0
+    exits with status 101 if dividing by 0
+    @param a the dividend
+    @param b the divisor
+    @return the result of the division
+*/
 long divide( long a, long b )
 {
     // trying to divide by 0

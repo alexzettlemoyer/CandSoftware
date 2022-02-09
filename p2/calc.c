@@ -1,6 +1,10 @@
 /**
     @file calc.c
     @author Alex Zettlemoyer
+    Program that reads in a line of numbers and operators
+    (in either base 10 or base 25)
+    performs the operations on input numbers
+    and outputs the result in the given base
 */
 #include "number.h"
 #include "operation.h"
@@ -87,5 +91,5 @@ int main()
     }
     printValue(value);
     printf("\n");
-    return 0;
+    return EXIT_SUCCESS;
 }
