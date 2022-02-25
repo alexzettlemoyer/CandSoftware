@@ -1,6 +1,10 @@
 /**
 	@file lexicon.c
 	@author Alex Zettlemoyer
+	stores the list of words and provides the functions for using it
+	readWords reads in a text file and checks for errors
+	chooseWord randomly chooses a word from the list
+	inList checks if a given word is in the word list
 */
 #include "lexicon.h"
 #include "io.h"
@@ -37,19 +41,44 @@ void readWords (char const filename[] )
   	while ( wordNum < WORD_LIMIT && readLine(fp, wordList[wordNum], WORD_LEN) ) {  
   		
   		// if the line wasn't exactly 5 characters long
-  		if ( strlen(wordList[wordNum]) != WORD_LEN ) {
-  			fprintf( stderr, "Invalid word file\n" );
-  			exit( EXIT_FAILURE );
-  		}	
+  		if ( strlen(wordList[wordNum]) != WORD_LEN )
+  			invalid();
   		wordNum++;
   	}
   	
   	// the word list didn't have any words
-  	if ( wordNum == 0 ) {
-  		fprintf( stderr, "Invalid word file" );
-  		exit( EXIT_FAILURE );
+  	if ( wordNum == 0 )
+  		invalid();
+  	
+  	// error handling:
+  	
+  	char str[WORD_LEN + 1];
+  	// for each word in the word list
+  	for (int i = 0; i < wordNum; i++) {
+  		strcpy( str, wordList[i] );
+  		
+  		// check for non- lowercase letter characters
+  		for (int j = 0; j < WORD_LEN; i++) {
+  			if ( str[i] < 'a' || 'z' < str[i] )
+  				invalid();
+  		}
+  		
+  		// check for duplicate words
+  			// remove the current index word from the wordList
+  		wordList[i][0] = '\0'
+  			// check if there are any other instances of that word
+  		if ( inList(str) )
+  			invalid();
+  		
+  		// if not a duplicate, put word back in list
+  		strcpy( wordList[i], str );
   	}
+}
 
+void invalid()
+{
+	fprintf(stderr, "Invalid word file" );
+	exit(EXIT_FAILURE);
 }
 
 /**
