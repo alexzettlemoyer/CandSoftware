@@ -23,6 +23,14 @@ char wordList[WORD_LIMIT][WORD_LEN + 2];
 /** global static variable that stores the number of words (rows) in wordList */
 int wordNum;
 
+/** report that the word file is invalid and exit unsuccessfully */
+static void invalid()
+{
+	fprintf(stderr, "Invalid word file\n" );
+	exit(EXIT_FAILURE);
+}
+
+
 /** 
 	readWords function
 	function to read in word list from file with the given name
@@ -38,8 +46,8 @@ void readWords (char const filename[] )
   	}
   	
   	wordNum = 0;
-  	while ( wordNum < WORD_LIMIT && readLine(fp, wordList[wordNum], WORD_LEN) ) {  
-  		
+  	while ( wordNum < WORD_LIMIT && readLine(fp, wordList[wordNum], WORD_LEN + 1) ) {  
+  		  		
   		// if the line wasn't exactly 5 characters long
   		if ( strlen(wordList[wordNum]) != WORD_LEN )
   			invalid();
@@ -57,15 +65,15 @@ void readWords (char const filename[] )
   	for (int i = 0; i < wordNum; i++) {
   		strcpy( str, wordList[i] );
   		
-  		// check for non- lowercase letter characters
-  		for (int j = 0; j < WORD_LEN; i++) {
-  			if ( str[i] < 'a' || 'z' < str[i] )
+  		// check for non- lowercase characters
+  		for (int j = 0; j < WORD_LEN; j++) {
+  			if ( str[j] < 'a' || 'z' < str[j] )
   				invalid();
   		}
   		
   		// check for duplicate words
   			// remove the current index word from the wordList
-  		wordList[i][0] = '\0'
+  		wordList[i][0] = '\0';
   			// check if there are any other instances of that word
   		if ( inList(str) )
   			invalid();
@@ -73,12 +81,6 @@ void readWords (char const filename[] )
   		// if not a duplicate, put word back in list
   		strcpy( wordList[i], str );
   	}
-}
-
-void invalid()
-{
-	fprintf(stderr, "Invalid word file" );
-	exit(EXIT_FAILURE);
 }
 
 /**
