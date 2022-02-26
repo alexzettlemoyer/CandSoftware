@@ -48,9 +48,10 @@ bool checkGuess( const char target[], const char guess[] ) {
 	return correct == 5;
 }
 
-int main(int args, char *argv[])
+// int args, char *argv[]
+int main( int args, char *argv[] )
 {
-	long seed;
+	long seed = 0;
 	bool correct = 0;
 	int guessCount = 0;
 	char guess[WORD_LEN + 1];
@@ -60,8 +61,13 @@ int main(int args, char *argv[])
 	readWords(argv[1]);
 	
 	// if a seed was passed in
-	if (args == 3)
-		seed = atol(argv[2]); 
+	if (args == 3) {
+	
+		int i = 0;
+		while ( argv[2][i] ) {
+			seed += argv[2][i];
+		}
+	}
 	// if a seed wasn't passed in use current seconds since 1970
 	else {
 		seed = time(NULL);

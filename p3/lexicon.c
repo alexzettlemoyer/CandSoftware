@@ -41,7 +41,7 @@ void readWords (char const filename[] )
 {
 	FILE *fp;
 	if ( ( fp = fopen( filename, "r" ) ) == NULL ) {
-    	fprintf( stderr, "Can't open word list: %s", filename );
+    	fprintf( stderr, "Can't open word list: %s\n", filename );
     	exit( EXIT_FAILURE );
   	}
   	
