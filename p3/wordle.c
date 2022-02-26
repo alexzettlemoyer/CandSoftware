@@ -2,9 +2,9 @@
 	@file wordle.c
 	@author Alex Zettlemoyer
 */
-//#include "history.h"
 #include "io.h"
 #include "lexicon.h"
+#include "history.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -97,5 +97,6 @@ int main(int args, char *argv[])
 	else
 		printf("Solved in %d guesses\n", guessCount);
 	
+	updateScore(guessCount);
 	return 0;
 }

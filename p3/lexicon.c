@@ -81,6 +81,8 @@ void readWords (char const filename[] )
   		// if not a duplicate, put word back in list
   		strcpy( wordList[i], str );
   	}
+  	
+  	fclose(fp);
 }
 
 /**
