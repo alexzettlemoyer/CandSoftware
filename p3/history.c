@@ -41,10 +41,10 @@ void printScores(FILE *fp, int scores[])
 	for(int i = 0; i < SCORE_NUM; i++) {
 		fprintf(fp, "%d ", scores[i]);
 		
-		if ( i + 1 < 10 )
-			printf("%2d  : %2d\n", i + 1, scores[i]);
+		if ( i + 1 < SCORE_NUM )
+			printf("%2d  :  %2d\n", i + 1, scores[i]);
 		else
-			printf("%2d+ : %2d\n", i+ 1, scores[i]);
+			printf("%2d+ :  %2d\n", i+ 1, scores[i]);
 	}
 }
 
@@ -65,7 +65,10 @@ void updateScore(int guessCount)
 	if ( ( fp = fopen( "scores.txt", "rb+" ) ) != NULL )
   		readScores(fp, scores);
   	  	
-  	scores[guessCount - 1] += 1;
+  	if ( guessCount >= SCORE_NUM )	
+  		scores[ SCORE_NUM -1 ] += 1;
+  	else
+  		scores[guessCount - 1] += 1;
   	
   	// open in write mode
   	fp = fopen( "scores.txt", "w" );

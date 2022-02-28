@@ -36,12 +36,16 @@
 bool checkGuess( const char target[], const char guess[] ) {
 	bool inWord = 0;
 	int correct = 0;
+	int color = 0; // stores the current output color: 0 black, 1 green, 2 yellow
 	
 	for (int i = 0; i < WORD_LEN; i++) {
 		
 		// if the character is in the right spot
 		if ( target[i] == guess[i] ) {
-			colorGreen();
+			if ( color != 1 ) {
+				colorGreen();
+				color = 1;
+			}
 			fprintf(stdout, "%c", guess[i]);
 			correct++;
 		}
@@ -49,14 +53,20 @@ bool checkGuess( const char target[], const char guess[] ) {
 			// check if the character is in the target word
 			for ( int j = 0; j < WORD_LEN && !inWord; j++ ) {
 				if ( guess[i] == target[j] ) {
-					colorYellow();
+					if ( color != 2 ) {
+						colorYellow();
+						color = 2;
+					}
 					fprintf(stdout, "%c", guess[i]);
 					inWord = 1;
 				}
 			}
 			// if the character wasn't in the target word
 			if ( !inWord ) {
-				colorDefault();
+				if ( color != 0 ) {
+					colorDefault();
+					color = 0;
+				}
 				fprintf(stdout, "%c", guess[i]);
 			}
 		}
