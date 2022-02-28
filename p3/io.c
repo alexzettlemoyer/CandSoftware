@@ -60,7 +60,7 @@ bool readLine( FILE *fp, char str[], int n )
 */
 void colorGreen()
 {
-	printf("%c%c%c%c%c", 0x1B, 0x5B, 0x33, 0x32, 0x6D);
+	fprintf(stdout, "\x1B\x5B\x33\x32\x6D");
 }
 
 /**
@@ -70,7 +70,7 @@ void colorGreen()
 */
 void colorYellow()
 {
-	printf("%c%c%c%c%c", 0x1B, 0x5B, 0x33, 0x33, 0x6D);
+	fprintf(stdout, "\x1B\x5B\x33\x33\x6D");
 }
 
 /**
@@ -80,5 +80,5 @@ void colorYellow()
 */
 void colorDefault()
 {
-	printf("%c%c%c%c", 0x1B, 0x5B, 0x30, 0x6D);
+	fprintf(stdout, "\x1B\x5B\x30\x6D");
 }

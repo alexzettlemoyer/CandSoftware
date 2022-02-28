@@ -3,6 +3,10 @@
 	@author Alex Zettlemoyer
 	header file for history.c
 */
+#include <stdio.h>
+
+/** the number of possible scores */
+#define SCORE_NUM 10
 
 /**
 	readScores
@@ -11,12 +15,7 @@
 	@param fp the file to read from
 	@param scores a 0 populated array of scores to fill
 */
-void readScores(FILE *fp, int scores[])
-{
-	for (int i = 0; i < SCORE_NUM; i++) {
-		fscanf(fp, "%d ", &scores[i]);
-	}
-}
+void readScores(FILE *fp, int scores[]);
 
 /**
 	printScores
