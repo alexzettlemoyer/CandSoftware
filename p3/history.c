@@ -39,13 +39,17 @@ void readScores(FILE *fp, int scores[])
 void printScores(FILE *fp, int scores[])
 {
 	for(int i = 0; i < SCORE_NUM; i++) {
-		fprintf(fp, "%d ", scores[i]);
 		
-		if ( i + 1 < SCORE_NUM )
+		if ( i + 1 < SCORE_NUM ) {
+			fprintf(fp, "%d ", scores[i]);
 			printf("%2d  :  %3d\n", i + 1, scores[i]);
-		else
+		}
+		else {
+			fprintf(fp, "%d", scores[i]);
 			printf("%2d+ :  %3d\n", i+ 1, scores[i]);
+		}
 	}
+	fprintf(fp, "\n");
 }
 
 /**
