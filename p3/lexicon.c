@@ -55,7 +55,7 @@ void readWords (char const filename[] )
   	}
   	
   	// the word list didn't have any words
-  	if ( wordNum == 0 )
+  	if ( wordNum == 0 || wordNum == WORD_LIMIT )
   		invalid();
   	
   	// error handling:

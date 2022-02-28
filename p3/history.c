@@ -42,9 +42,9 @@ void printScores(FILE *fp, int scores[])
 		fprintf(fp, "%d ", scores[i]);
 		
 		if ( i + 1 < SCORE_NUM )
-			printf("%2d  :  %2d\n", i + 1, scores[i]);
+			printf("%2d  :  %3d\n", i + 1, scores[i]);
 		else
-			printf("%2d+ :  %2d\n", i+ 1, scores[i]);
+			printf("%2d+ :  %3d\n", i+ 1, scores[i]);
 	}
 }
 

@@ -33,8 +33,14 @@ bool readLine( FILE *fp, char str[], int n )
 	
 	// keep reading the next character
 	while ( fscanf(fp, "%c", &ch) == 1 ) {
-		if ( ch == EOF || ch == '\n') {
-			break;
+	
+		if ( ch == EOF ) {
+			str[i] = '\0';
+			return false;
+		}
+		if ( ch == '\n' ) {
+			str[i] = '\0';
+			return true;
 		}
 		if (i < n) {
 			str[i] = ch;

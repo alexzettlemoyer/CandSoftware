@@ -58,13 +58,24 @@ bool checkGuess( const char target[], const char guess[] ) {
 				// the current character exists in the target
 				if ( guess[i] == target[j] ) {
 				
-					// if the color isn't already yellow
-					if ( color != 2 ) {
-						colorYellow();
-						color = 2;
-					}
-					fprintf(stdout, "%c", guess[i]);
 					inWord = 1;
+				
+					// check if the current char was previously printed yellow
+					for ( int k = i - 1; k > 0; k-- ) {
+						if ( guess[k] == guess[i] ) {
+							inWord = 0;
+							break;
+						}
+					}
+				
+					if ( inWord ) {
+						// if the color isn't already yellow
+						if ( color != 2 ) {
+							colorYellow();
+							color = 2;
+						}
+						fprintf(stdout, "%c", guess[i]);
+					}
 				}
 			}
 			// if the character wasn't in the target word
@@ -77,10 +88,14 @@ bool checkGuess( const char target[], const char guess[] ) {
 				fprintf(stdout, "%c", guess[i]);
 			}
 		}
-		
+
 		inWord = 0;
 	}
 	
+	if ( color != 0 ) {
+		colorDefault();
+		color = 0;
+	}
 	printf("\n");
 	return correct == 5;
 }
@@ -121,7 +136,11 @@ int main( int args, char *argv[] )
 	// while the guess is not correct	
 	while ( !correct ) {
 		
-		readLine(stdin, guess, WORD_LEN + 1);
+		// if readLine returns false (EOF)
+		if ( !readLine(stdin, guess, WORD_LEN + 1)) {
+			quit = 1;
+			break;
+		}
 		
 		if ( strcmp( guess, "quit") == 0 ) {
 			quit = 1;
@@ -129,8 +148,8 @@ int main( int args, char *argv[] )
 		}
 	
 		// check if the user input is exactly 5 characters
-		if ( strlen(guess) != WORD_LEN ) {
-			fprintf( stderr, "Invalid guess\n" );
+		if ( strlen(guess) != WORD_LEN || !inList(guess) ) {
+			fprintf( stdout, "Invalid guess\n" );
 			invalid = 1;
 		}
 		
@@ -138,7 +157,7 @@ int main( int args, char *argv[] )
 			// check for non- lowercase characters
 			for (int j = 0; j < WORD_LEN; j++) {
   				if ( guess[j] < 'a' || 'z' < guess[j] ){
-					fprintf( stderr, "Invalid guess\n" );
+					fprintf( stdout, "Invalid guess\n" );
 					invalid = 1;
 				}
   			}
@@ -146,7 +165,13 @@ int main( int args, char *argv[] )
 		// if the guess wasn't invalid 
 		if ( !invalid ) {
 			guessCount++;
-			correct = checkGuess(target, guess);
+			
+			if ( strcmp(target, guess) == 0 ) {
+				correct = true;
+				break;
+			}
+			else
+				correct = checkGuess(target, guess);
 		}
 		invalid = 0;
 	}
