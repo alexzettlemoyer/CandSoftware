@@ -12,6 +12,9 @@
 #include <stdbool.h>
 #include <time.h>
 
+/** the Base of the seed */
+#define BASE 10
+
 bool checkGuess( const char target[], const char guess[] ) {
 	bool inWord = 0;
 	int correct = 0;
@@ -48,7 +51,6 @@ bool checkGuess( const char target[], const char guess[] ) {
 	return correct == 5;
 }
 
-// int args, char *argv[]
 int main( int args, char *argv[] )
 {
 	long seed = 0;
@@ -60,19 +62,19 @@ int main( int args, char *argv[] )
 	// read the words from the given filename
 	readWords(argv[1]);
 	
+	//printf("%zu", sizeof ( wordList ));
+	
 	// if a seed was passed in
 	if (args == 3) {
-	
-		int i = 0;
-		while ( argv[2][i] ) {
-			seed += argv[2][i];
-		}
+		// convert the command line string argument seed into a long int
+		seed = strtol( argv[2] , argv + 2 + strlen(argv[2]), BASE );
 	}
 	// if a seed wasn't passed in use current seconds since 1970
 	else {
 		seed = time(NULL);
 	}
 	
+		
 	chooseWord(seed, target);
 	
 	// while the guess is not correct	
@@ -83,14 +85,12 @@ int main( int args, char *argv[] )
 		// check if the user input is exactly 5 characters
 		if ( strlen(guess) != WORD_LEN ) {
 			fprintf( stderr, "Invalid guess\n" );
-			exit(EXIT_FAILURE);
 		}
 
 		// check for non- lowercase characters
 		for (int j = 0; j < WORD_LEN; j++) {
   			if ( guess[j] < 'a' || 'z' < guess[j] ){
 				fprintf( stderr, "Invalid guess\n" );
-				exit(EXIT_FAILURE);
 			}
   		}
 	
