@@ -149,7 +149,7 @@ int main( int args, char *argv[] )
 	while ( !correct ) {
 		
 		// if readLine returns false (EOF)
-		if ( !readLine(stdin, guess, WORD_CHARS ) {
+		if ( !readLine(stdin, guess, WORD_CHARS) ) {
 			quit = 1;
 			break;
 		}
