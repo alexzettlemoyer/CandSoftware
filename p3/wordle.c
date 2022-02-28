@@ -42,6 +42,8 @@ bool checkGuess( const char target[], const char guess[] ) {
 		
 		// if the character is in the right spot
 		if ( target[i] == guess[i] ) {
+			
+			// if the color isn't already green
 			if ( color != 1 ) {
 				colorGreen();
 				color = 1;
@@ -52,7 +54,11 @@ bool checkGuess( const char target[], const char guess[] ) {
 		else {
 			// check if the character is in the target word
 			for ( int j = 0; j < WORD_LEN && !inWord; j++ ) {
+			
+				// the current character exists in the target
 				if ( guess[i] == target[j] ) {
+				
+					// if the color isn't already yellow
 					if ( color != 2 ) {
 						colorYellow();
 						color = 2;
@@ -63,6 +69,7 @@ bool checkGuess( const char target[], const char guess[] ) {
 			}
 			// if the character wasn't in the target word
 			if ( !inWord ) {
+				// if the color isn't already black
 				if ( color != 0 ) {
 					colorDefault();
 					color = 0;
@@ -74,7 +81,6 @@ bool checkGuess( const char target[], const char guess[] ) {
 		inWord = 0;
 	}
 	
-	colorDefault();
 	printf("\n");
 	return correct == 5;
 }
@@ -98,9 +104,7 @@ int main( int args, char *argv[] )
 	
 	// read the words from the given filename
 	readWords(argv[1]);
-	
-	//printf("%zu", sizeof ( wordList ));
-	
+		
 	// if a seed was passed in
 	if (args == 3) {
 		// convert the command line string argument seed into a long int
