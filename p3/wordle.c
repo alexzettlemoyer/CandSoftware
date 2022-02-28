@@ -109,7 +109,7 @@ bool checkGuess( const char target[], const char guess[] ) {
 		color = 0;
 	}
 	printf("\n");
-	return correct == 5;
+	return correct == WORD_LEN;
 }
 
 /**
@@ -126,8 +126,8 @@ int main( int args, char *argv[] )
 	bool invalid = 0;
 	bool quit = 0;
 	int guessCount = 0;
-	char guess[WORD_LEN + 1];
-	char target[WORD_LEN + 1];
+	char guess[WORD_CHARS];
+	char target[WORD_CHARS];
 	
 	// read the words from the given filename
 	readWords(argv[1]);
@@ -149,7 +149,7 @@ int main( int args, char *argv[] )
 	while ( !correct ) {
 		
 		// if readLine returns false (EOF)
-		if ( !readLine(stdin, guess, WORD_LEN + 1)) {
+		if ( !readLine(stdin, guess, WORD_CHARS ) {
 			quit = 1;
 			break;
 		}

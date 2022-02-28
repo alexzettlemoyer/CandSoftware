@@ -5,6 +5,13 @@
 /** Maximum lengh of a word on the word list. */
 #define WORD_LEN 5
 
+/** 
+	Number of chars for a char array for a word in the list.
+	Allows 2 extra characters for null termination
+	and to check for word length overflow
+*/
+#define WORD_CHARS 7
+
 /** Maximum number of words on the word list. */
 #define WORD_LIMIT 100000
 
@@ -19,7 +26,7 @@
 	+ 1 to check if the line had > 5 characters
 	+ 1 as a space for null termination
 */
-extern char wordList[WORD_LIMIT][WORD_LEN + 2];
+extern char wordList[WORD_LIMIT][WORD_CHARS];
 
 /** 
 	readWords function

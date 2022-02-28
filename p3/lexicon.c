@@ -18,7 +18,7 @@
 #define MULTIPLIER 4611686018453
 
 /** global static variable to store list of words */
-char wordList[WORD_LIMIT][WORD_LEN + 2];
+char wordList[WORD_LIMIT][WORD_CHARS];
 
 /** global static variable that stores the number of words (rows) in wordList */
 int wordNum;
