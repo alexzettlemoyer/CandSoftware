@@ -11,7 +11,6 @@
 
 void readScores(FILE *fp, int scores[])
 {
-	fp = fopen("scores.txt", "w");
 	for (int i = 0; i < SCORE_NUM; i++) {
 		fscanf(fp, "%d ", &scores[i]);
 	}
@@ -35,11 +34,13 @@ void updateScore(int guessCount)
 	int scores[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		
 	// the scores.txt file exists
-	if ( ( fp = fopen( "scores.txt", "ab+" ) ) != NULL )
+	if ( ( fp = fopen( "scores.txt", "rb+" ) ) != NULL )
   		readScores(fp, scores);
   	  	
   	scores[guessCount - 1] += 1;
   	
+  	// open in write mode
+  	fp = fopen( "scores.txt", "w" );
   	printScores(fp, scores);
   	
   	fclose(fp);

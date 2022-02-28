@@ -55,6 +55,8 @@ int main( int args, char *argv[] )
 {
 	long seed = 0;
 	bool correct = 0;
+	bool invalid = 0;
+	bool quit = 0;
 	int guessCount = 0;
 	char guess[WORD_LEN + 1];
 	char target[WORD_LEN + 1];
@@ -79,23 +81,39 @@ int main( int args, char *argv[] )
 	
 	// while the guess is not correct	
 	while ( !correct ) {
-	
+		
 		readLine(stdin, guess, WORD_LEN + 1);
+		
+		if ( strcmp( guess, "quit") == 0 ) {
+			quit = 1;
+			break;
+		}
 	
 		// check if the user input is exactly 5 characters
 		if ( strlen(guess) != WORD_LEN ) {
 			fprintf( stderr, "Invalid guess\n" );
+			invalid = 1;
 		}
-
-		// check for non- lowercase characters
-		for (int j = 0; j < WORD_LEN; j++) {
-  			if ( guess[j] < 'a' || 'z' < guess[j] ){
-				fprintf( stderr, "Invalid guess\n" );
-			}
-  		}
+		
+		if ( !invalid )
+			// check for non- lowercase characters
+			for (int j = 0; j < WORD_LEN; j++) {
+  				if ( guess[j] < 'a' || 'z' < guess[j] ){
+					fprintf( stderr, "Invalid guess\n" );
+					invalid = 1;
+				}
+  			}
 	
-		guessCount++;
-		correct = checkGuess(target, guess);
+		if ( !invalid ) {
+			guessCount++;
+			correct = checkGuess(target, guess);
+		}
+		invalid = 0;
+	}
+	
+	if ( quit ) {
+		printf( "The word was %s\n", target );
+		return 0;
 	}
 	
 	if ( guessCount == 1 )
