@@ -24,6 +24,15 @@
 /** the Base of the seed */
 #define BASE 10
 
+/** color code for black */
+#define DEFAULT 0
+
+/** color code for green */
+#define GREEN 1
+
+/** color code for yellow */
+#define YELLOW 2
+
 /**
 	checkGuess function
 	compares two 5 letter words
@@ -36,7 +45,7 @@
 bool checkGuess( const char target[], const char guess[] ) {
 	bool inWord = 0;
 	int correct = 0;
-	int color = 0; // stores the current output color: 0 black, 1 green, 2 yellow
+	int color = DEFAULT; // stores the current output color: 0 black, 1 green, 2 yellow
 	
 	for (int i = 0; i < WORD_LEN; i++) {
 		
@@ -44,9 +53,9 @@ bool checkGuess( const char target[], const char guess[] ) {
 		if ( target[i] == guess[i] ) {
 			
 			// if the color isn't already green
-			if ( color != 1 ) {
+			if ( color != GREEN ) {
 				colorGreen();
-				color = 1;
+				color = GREEN;
 			}
 			fprintf(stdout, "%c", guess[i]);
 			correct++;
@@ -70,9 +79,9 @@ bool checkGuess( const char target[], const char guess[] ) {
 				
 					if ( inWord ) {
 						// if the color isn't already yellow
-						if ( color != 2 ) {
+						if ( color != YELLOW ) {
 							colorYellow();
-							color = 2;
+							color = YELLOW;
 						}
 						fprintf(stdout, "%c", guess[i]);
 					}
@@ -81,9 +90,9 @@ bool checkGuess( const char target[], const char guess[] ) {
 			// if the character wasn't in the target word
 			if ( !inWord ) {
 				// if the color isn't already black
-				if ( color != 0 ) {
+				if ( color != DEFAULT ) {
 					colorDefault();
-					color = 0;
+					color = DEFAULT;
 				}
 				fprintf(stdout, "%c", guess[i]);
 			}
