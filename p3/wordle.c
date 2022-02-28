@@ -33,6 +33,9 @@
 /** color code for yellow */
 #define YELLOW 2
 
+/** command line argument vector index for seed */
+#define SEED_INDEX 2
+
 /**
 	checkGuess function
 	compares two 5 letter words
@@ -130,9 +133,9 @@ int main( int args, char *argv[] )
 	readWords(argv[1]);
 		
 	// if a seed was passed in
-	if (args == 3) {
+	if (args == SEED_INDEX + 1) {
 		// convert the command line string argument seed into a long int
-		seed = strtol( argv[2] , argv + 2 + strlen(argv[2]), BASE );
+		seed = strtol( argv[SEED_INDEX] , argv + SEED_INDEX + strlen(argv[SEED_INDEX]), BASE );
 	}
 	// if a seed wasn't passed in use current seconds since 1970
 	else {
