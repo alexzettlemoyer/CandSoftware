@@ -112,7 +112,7 @@ int main( int args, char *argv[] )
 	}
 	
 	if ( quit ) {
-		printf( "The word was %s\n", target );
+		printf( "The word was \"%s\"\n", target );
 		return 0;
 	}
 	

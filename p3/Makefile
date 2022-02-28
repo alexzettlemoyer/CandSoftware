@@ -1,6 +1,3 @@
-CC: gcc
-CFLAGS: -Wall -std=c99
-
 wordle: wordle.o lexicon.o history.o io.o
 	gcc wordle.o lexicon.o history.o io.o -o wordle
 
