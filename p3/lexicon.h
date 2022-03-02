@@ -43,6 +43,15 @@ extern char wordList[WORD_LIMIT][WORD_CHARS];
 void readWords(char const filename[]);
 
 /**
+	checkDuplicates function
+	checks for duplicate words in the wordList array
+	because the list is sorted, 
+	this function compares each element to the element before and after it
+    prints invalid and exits unsuccessfully if a duplicate is found
+*/
+void checkDuplicates();
+
+/**
     chooseWord function
     chooses a word from the current word list 
     copies the chosen word into the word[] array
@@ -54,7 +63,15 @@ void chooseWord(long seed, char word[]);
 /**
     inList function
     checks if the given word is already in the list
+    implemented using binary search
     @param word[] a constant char array to check for in the existing list
     @return true if the function is in the list, false otherwise
 */
 bool inList(char const word[]);
+
+/**
+	sortList function
+	implemented using quickSort
+	calls the quickSort function to sort the list
+*/
+void sortList();

@@ -107,6 +107,7 @@ bool checkGuess( const char target[], const char guess[] ) {
         }
     }
     
+    // reset back to the default color
     if ( color != 0 ) {
         colorDefault();
         color = 0;
@@ -144,9 +145,15 @@ int main( int args, char *argv[] )
     else {
         seed = time(NULL);
     }
-    
-        
+         
+    // choose a target word
     chooseWord(seed, target);
+    
+    // quickSort the list
+    sortList();
+    
+    // check for duplicates
+    checkDuplicates();
     
     // while the guess is not correct   
     while ( !correct ) {
