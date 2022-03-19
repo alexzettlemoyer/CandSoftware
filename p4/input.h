@@ -4,6 +4,7 @@
 	header for input.c file
 	input handling for agency.c program
 */
+#include <stdio.h>
 
 /**
 	readLine

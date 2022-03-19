@@ -25,6 +25,8 @@ char *readLine(FILE *fp)
 	char ch = 'p';
 	
 	while ( fscanf( fp, "%c", &ch ) == 1 && ch != '\n' && ch != EOF ) {
+		
+		//printf("%c ", ch);
 			
 		s[ length ] = ch;
 		length++;
