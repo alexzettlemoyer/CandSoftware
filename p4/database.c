@@ -11,7 +11,9 @@
 #include <string.h>
  
 #define INITIAL_CAPACITY 5
-#define STRING_LENGTH 16
+#define STRING_LENGTH 17
+#define EXPECTED_LENGTH 15
+#define ID_LENGTH 4
 
 /**
 	makeDatabase
@@ -70,6 +72,42 @@ void resize( struct Database *database )
 	
 }
 
+void invalid(char const *filename)
+{
+	fprintf(stderr, "Invalid employee file: %s\n", filename);
+	exit( EXIT_FAILURE );
+}
+
+void checkInvalid( char const *id, char const *first, char const *last, 
+	char const *skill, char const *filename, struct Database *database)
+{
+	// if the ID is not exactly 4 characters long
+	if ( strlen(id) != ID_LENGTH )
+		invalid( filename );
+	
+	// if the ID is not 4 digits
+	for ( int i = 0; i < ID_LENGTH; i++ ) {
+		if ( id[ i ] < '0' || id[ i ] > '9')
+			invalid( filename );
+	}
+	
+	// if the ID is the same as any other in the list
+	for ( int i = 0; i < (*database).employeeNum; i++ ) {
+		if ( strcmp( (*database).employees[i] -> id, id ) == 0 )
+			invalid( filename );
+	}
+	
+	// if any of the other fields exceed 15 characters
+	if ( strlen(first) > EXPECTED_LENGTH )
+		invalid(filename);
+		
+	if ( strlen(last) > EXPECTED_LENGTH )
+		invalid(filename);
+		
+	if ( strlen(skill) > EXPECTED_LENGTH )
+		invalid(filename);
+}
+
 /**
 	readEmployees
 */
@@ -78,8 +116,8 @@ void readEmployees( char const *filename, struct Database *database )
 	
 	FILE *fp;
     if ( ( fp = fopen( filename, "r" ) ) == NULL ) {
-    	// usage message
-        fprintf( stderr, "error\n");
+    	// invalid file
+        fprintf( stderr, "Can't open file: %s\n", filename);
         exit( EXIT_FAILURE );
     }
     
@@ -96,8 +134,11 @@ void readEmployees( char const *filename, struct Database *database )
 		strcpy(assignment, "Available");		
 		
 		if ( sscanf( line, "%s %s %s %s", id, first, last, skill) != 4 )
-			break;		
-			
+			invalid( filename );		
+		
+		// check if the employee being read in is valid
+		checkInvalid( id, first, last, skill, filename, database );
+		
 		// if we are at the array capacity
 		if ( count == (*database).capacity )
 			resize(database);
@@ -129,13 +170,17 @@ void listEmployees(struct Database *database, int (*compare)( void const *va, vo
     bool (*test)( struct Employee const *emp, char const *str ), char const *str)
 {
 	qsort( database -> employees, database -> employeeNum, sizeof(database -> employees), compare);
+	
+	printf("%-4s %-15s %-15s %-15s %s\n", "ID", "First Name", "Last Name", "Skill", "Assignment");
 
 	for (int i = 0; i < (database -> employeeNum); i++) {
 	
-		printf("%d:  %s ", i, (*database).employees[ i ] -> id);
-		printf("%s ", (*database).employees[i] -> first);
-		printf("%s ", (*database).employees[i] -> last);
-		printf("%s ", (*database).employees[i] -> skill);
-		printf("%s\n", (*database).employees[i] -> assignment);
+		if ( test((*database).employees[i], str) ) {
+			printf("%-4s ", (*database).employees[ i ] -> id);
+			printf("%-15s ", (*database).employees[i] -> first);
+			printf("%-15s ", (*database).employees[i] -> last);
+			printf("%-15s ", (*database).employees[i] -> skill);
+			printf("%-20s\n", (*database).employees[i] -> assignment);
+		}
 	}
 }

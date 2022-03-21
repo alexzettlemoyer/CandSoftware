@@ -29,8 +29,19 @@ int compareId( void const *va, void const *vb )
 	return idA - idB;
 }
 
-bool test( struct Employee const *emp, char const *str )
+bool testAll( struct Employee const *emp, char const *str )
 {
+	return true;
+}
+
+bool testSkill( struct Employee const *emp, char const *str )
+{
+	return ( strcmp( emp -> skill, str) == 0 );
+}
+
+bool testAssignment (struct Employee const *emp, char const *str )
+{
+	return ( strcmp( emp -> assignment, str) == 0 );
 }
 
 /**
@@ -40,20 +51,9 @@ int main()
 {
 	struct Database *database = makeDataBase();
 	readEmployees("list-c.txt", database);
-	
-	for (int i = 0; i < (database -> employeeNum); i++) {
-	
-		printf("%d:  %s ", i, (*database).employees[ i ] -> id);
-		printf("%s ", (*database).employees[i] -> first);
-		printf("%s ", (*database).employees[i] -> last);
-		printf("%s ", (*database).employees[i] -> skill);
-		printf("%s\n", (*database).employees[i] -> assignment);
-	}
-	
-	printf("\n");
-	
-	char const *str = "";
-	listEmployees( database, compareId, test, str);
+		
+	char const *str = "Available";
+	listEmployees( database, compareId, testAssignment, str);
 		
 	freeDataBase(database);
 	
