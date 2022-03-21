@@ -81,6 +81,8 @@ void invalid(char const *filename)
 void checkInvalid( char const *id, char const *first, char const *last, 
 	char const *skill, char const *filename, struct Database *database)
 {
+
+	
 	// if the ID is not exactly 4 characters long
 	if ( strlen(id) != ID_LENGTH )
 		invalid( filename );
@@ -93,9 +95,12 @@ void checkInvalid( char const *id, char const *first, char const *last,
 	
 	// if the ID is the same as any other in the list
 	for ( int i = 0; i < (*database).employeeNum; i++ ) {
+	//	printf("%s\n", (*database).employees[i] -> id);
+
 		if ( strcmp( (*database).employees[i] -> id, id ) == 0 )
 			invalid( filename );
 	}
+//	printf("\n");
 	
 	// if any of the other fields exceed 15 characters
 	if ( strlen(first) > EXPECTED_LENGTH )
@@ -121,7 +126,7 @@ void readEmployees( char const *filename, struct Database *database )
         exit( EXIT_FAILURE );
     }
     
-	int count = 0;
+	int count = (*database).employeeNum;
 	char *line = "";
 	
 	while ( ( line = readLine(fp)) != NULL ) {
@@ -183,4 +188,5 @@ void listEmployees(struct Database *database, int (*compare)( void const *va, vo
 			printf("%-20s\n", (*database).employees[i] -> assignment);
 		}
 	}
+	printf("\n");
 }

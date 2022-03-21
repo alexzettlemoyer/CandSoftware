@@ -47,13 +47,23 @@ bool testAssignment (struct Employee const *emp, char const *str )
 /**
 	main method
 */
-int main() 
+int main( int args, char *argv[] ) 
 {
+	// no files given on command line
+	if ( args <= 1 ) {
+		fprintf( stderr, "usage: agency <employee-file>*" );
+		exit( EXIT_FAILURE );
+	}
+	
 	struct Database *database = makeDataBase();
-	readEmployees("list-c.txt", database);
-		
-	char const *str = "Available";
-	listEmployees( database, compareId, testAssignment, str);
+	//char const *str = "Available";
+
+	for ( int i = 1; i < args; i++ ) {
+		readEmployees( argv[i], database );
+	}
+	listEmployees( database, compareId, testAll, NULL);
+	
+	
 		
 	freeDataBase(database);
 	
