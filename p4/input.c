@@ -22,9 +22,9 @@ char *readLine(FILE *fp)
 	int size = INITIAL_CAPACITY;
 	char *s = (char *) malloc( INITIAL_CAPACITY * sizeof( char ) );
 	
-	char ch = 'p';
+	char ch = ' ';
 	
-	while ( fscanf( fp, "%c", &ch ) == 1 && ch != '\n' && ch != EOF ) {
+	while ( (ch = fgetc( fp )) && ch != '\n' && ch != EOF ) {
 		
 		//printf("%c ", ch);
 			
@@ -46,5 +46,6 @@ char *readLine(FILE *fp)
 	length++;
 	s[ length ]	= '\0';
 	
+	//printf("\n");
 	return s;
 }
