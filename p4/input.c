@@ -36,16 +36,16 @@ char *readLine(FILE *fp)
 			// double the array size
 			size *= 2;
 			// reallocate it
-			s = (char *) realloc( s, size * sizeof( char ));
+			s = (char *) realloc( s, size * sizeof( char *));
 		}
 	}
 	
-	if ( ch == EOF && length == 0 )
+	if ( ch == EOF && length == 0 ) {
+		free( s );
 		return NULL;
+	}
 	
-	length++;
 	s[ length ]	= '\0';
 	
-	//printf("\n");
 	return s;
 }

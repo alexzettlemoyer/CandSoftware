@@ -9,6 +9,31 @@
 #include <stdbool.h>
 #include <string.h>
 
-Database *makeDataBase();
+/**
+	Employee Struct
+*/
+struct Employee {
+	char *id;
+	char *first;
+	char *last;
+	char *skill;
+	char *assignment;
+};
 
-void freeDataBase(Database *database);
+/**
+	Database Struct
+*/
+struct Database {
+	struct Employee **employees;
+	int employeeNum;
+	int capacity;
+};
+
+struct Database *makeDataBase();
+
+void readEmployees( char const *filename, struct Database *database );
+
+void listEmployees(struct Database *database, int (*compare)( void const *va, void const *vb ),
+    bool (*test)( struct Employee const *emp, char const *str ), char const *str);
+
+void freeDataBase(struct Database *database);
