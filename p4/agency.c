@@ -68,10 +68,8 @@ bool assign( bool assign, char *id, char *assignment, struct Database *database 
 {
 	bool found = 0;
 
-	if ( strlen(assignment) > ASSIGNMENT_LENGTH )
-				printf("Invalid command.1\n");
-	else if ( strlen(id) != ID_LENGTH ) 
-		printf("Invalid command.2\n");
+	if ( strlen(assignment) > ASSIGNMENT_LENGTH || strlen(id) != ID_LENGTH )
+		return found;
 	else {
 		// traverse all the employees
 		for ( int i = 0; i < (*database).employeeNum; i++ ) {
@@ -98,7 +96,7 @@ int main( int args, char *argv[] )
 {
 	// no files given on command line
 	if ( args <= 1 ) {
-		fprintf( stderr, "usage: agency <employee-file>*" );
+		fprintf( stderr, "usage: agency <employee-file>*\n" );
 		exit( EXIT_FAILURE );
 	}
 	
@@ -115,56 +113,53 @@ int main( int args, char *argv[] )
 	char *cmd1 = (char *) malloc( CMD_LENGTH * sizeof( char ) );
 	char *cmd2 = (char *) malloc( CMD2_LENGTH * sizeof( char ) );
 	char *cmd3 = (char *) malloc( CMD3_LENGTH * sizeof( char ) );
+	char *cmd4 =  (char *) malloc( CMD_LENGTH * sizeof( char ) );;
+
 
 	printf("cmd> ");
 	
 	while ( (input = readLine( stdin )) != NULL ) {
 	
-		commands = sscanf( input, "%s %s %s", cmd1, cmd2, cmd3 );
+		commands = sscanf( input, "%s %s %s %s", cmd1, cmd2, cmd3, cmd4 );
+		printf("%s\n", input);
 		
-		if ( strcmp( cmd1, "list" ) == 0 ) {
-			printf("list");
+		if ( commands > 3 )
+			printf("Invalid command\n");
+		else if ( strcmp( cmd1, "list" ) == 0 ) {
 			
 			switch ( commands ) {
 				case 1:
-					printf("\n");
 					listEmployees( database, compareId, testAll, NULL);
 					break;
 				case 3:
-					printf(" %s %s\n", cmd2, cmd3);
 
 					if ( strcmp(cmd2, "skill") == 0 )
 						listEmployees( database, compareId, testSkill, cmd3);
 					else if ( strcmp(cmd2, "assignment") == 0 )
 						listEmployees( database, compareSkill, testAssignment, cmd3);
 					else
-						printf("Invalid command.\n");
+						printf("Invalid command\n");
 					break;
 				default:
-					printf("Invalid command.\n");
+					printf("Invalid command\n");
 					break;
 			}	
 						
 		}
 		else if ( strcmp( cmd1, "assign" ) == 0 && commands == 3 ) {
-			if ( assign( true, cmd2, cmd3, database ) )
-				printf("%s %s %s\n", cmd1, cmd2, cmd3);
-			else
-				printf("Invalid command.3\n");
+			if ( !assign( true, cmd2, cmd3, database ) )
+				printf("Invalid command\n");
 		}
 		else if( strcmp( cmd1, "unassign" ) == 0 ) {
-			if ( assign( false, cmd2, "Available", database ) )
-				printf("%s %s\n", cmd1, cmd2);
-			else
-				printf("Invalid command.\n");
+			if ( !assign( false, cmd2, "Available", database ) )
+				printf("Invalid command\n");
 		}
 		else if( strcmp( cmd1, "quit" ) == 0 ) {
 			free( input );
-			printf("quit\n");
 			break;
 		}
 		else
-			printf("Invalid command.\n");
+			printf("Invalid command\n");
 	
 		free( input );
 		printf("\ncmd> ");
@@ -172,6 +167,7 @@ int main( int args, char *argv[] )
 	free(cmd1);
 	free(cmd2);
 	free(cmd3);	
+	free(cmd4);
 	freeDatabase(database);
 	
 	return  0;
