@@ -72,45 +72,54 @@ void resize( struct Database *database )
 	
 }
 
-void invalid(char const *filename, struct Database *database)
-{
-	fprintf(stderr, "Invalid employee file: %s\n", filename);
-	freeDatabase( database );
-	exit( EXIT_FAILURE );
-}
 
-void checkInvalid( char const *id, char const *first, char const *last, 
+bool checkInvalid( char const *id, char const *first, char const *last, 
 	char const *skill, char const *filename, struct Database *database)
 {
 
 	
 	// if the ID is not exactly 4 characters long
-	if ( strlen(id) != ID_LENGTH )
-		invalid( filename, database );
+	if ( strlen(id) != ID_LENGTH ) {
+		fprintf(stderr, "Invalid employee file: %s\n", filename);
+		return false;
+	}
+		
 	
 	// if the ID is not 4 digits
 	for ( int i = 0; i < ID_LENGTH; i++ ) {
-		if ( id[ i ] < '0' || id[ i ] > '9')
-			invalid( filename, database );
+		if ( id[ i ] < '0' || id[ i ] > '9') {
+			fprintf(stderr, "Invalid employee file: %s\n", filename);
+			return false;
+		}
 	}
 	
 	// if the ID is the same as any other in the list
 	for ( int i = 0; i < (*database).employeeNum; i++ ) {
 	//	printf("%s\n", (*database).employees[i] -> id);
 
-		if ( strcmp( (*database).employees[i] -> id, id ) == 0 )
-			invalid( filename, database );
+		if ( strcmp( (*database).employees[i] -> id, id ) == 0 ) {
+			fprintf(stderr, "Invalid employee file: %s\n", filename);
+			return false;
+		}
 	}
 	
 	// if any of the other fields exceed 15 characters
-	if ( strlen(first) > EXPECTED_LENGTH )
-		invalid(filename, database);
+	if ( strlen(first) > EXPECTED_LENGTH )  {
+		fprintf(stderr, "Invalid employee file: %s\n", filename);
+		return false;
+	}
 		
-	if ( strlen(last) > EXPECTED_LENGTH )
-		invalid(filename, database);
+	if ( strlen(last) > EXPECTED_LENGTH )  {
+		fprintf(stderr, "Invalid employee file: %s\n", filename);
+		return false;
+	}
 		
-	if ( strlen(skill) > EXPECTED_LENGTH )
-		invalid(filename, database);
+	if ( strlen(skill) > EXPECTED_LENGTH )  {
+		fprintf(stderr, "Invalid employee file: %s\n", filename);
+		return false;
+	}
+	
+	return true;
 }
 
 /**
@@ -138,11 +147,28 @@ void readEmployees( char const *filename, struct Database *database )
 		char *assignment = (char *) malloc( STRING_LENGTH * sizeof( char ) );
 		strcpy(assignment, "Available");		
 		
-		if ( sscanf( line, "%s %s %s %s", id, first, last, skill) != 4 )
-			invalid( filename, database );		
+		if ( sscanf( line, "%s %s %s %s", id, first, last, skill) != 4 ) {
+			fprintf(stderr, "Invalid employee file: %s\n", filename);
+			goto invalid;		
+		}
 		
 		// check if the employee being read in is valid
-		checkInvalid( id, first, last, skill, filename, database );
+		if ( !checkInvalid( id, first, last, skill, filename, database )) {
+			
+			invalid:
+			
+			free(id);
+			free(first);
+			free(last);
+			free(skill);
+			free(assignment);
+			
+			free(line);
+			fclose(fp);
+			freeDatabase( database );
+
+			exit( EXIT_FAILURE);
+		}
 		
 		// if we are at the array capacity
 		if ( count == (*database).capacity )

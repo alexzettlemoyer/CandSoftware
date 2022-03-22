@@ -12,5 +12,5 @@ input.o: input.c input.h
 
 clean:
 	rm -f agency.o database.o input.o
-	rm -f agency database input
+	rm -f agency
 	rm -f output.txt

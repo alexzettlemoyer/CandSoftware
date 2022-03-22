@@ -36,6 +36,19 @@ int compareId( void const *va, void const *vb )
 	return idA - idB;
 }
 
+int compareSkill( void const *va, void const *vb )
+{
+	struct Employee **a = ((struct Employee **) va);
+	struct Employee **b = ((struct Employee **) vb);
+	
+	int compare = strcmp( (*a) -> skill, (*b) -> skill );
+	
+	if ( compare == 0 )
+		compare = compareId( va, vb );
+	
+	return compare;
+}
+
 bool testAll( struct Employee const *emp, char const *str )
 {
 	return true;
@@ -95,8 +108,6 @@ int main( int args, char *argv[] )
 	for ( int i = 1; i < args; i++ ) {
 		readEmployees( argv[i], database );
 	}
-	listEmployees( database, compareId, testAll, NULL);
-	printf("\n");
 	
 	int commands = 0;
 	
@@ -125,7 +136,7 @@ int main( int args, char *argv[] )
 					if ( strcmp(cmd2, "skill") == 0 )
 						listEmployees( database, compareId, testSkill, cmd3);
 					else if ( strcmp(cmd2, "assignment") == 0 )
-						listEmployees( database, compareId, testAssignment, cmd3);
+						listEmployees( database, compareSkill, testAssignment, cmd3);
 					else
 						printf("Invalid command.\n");
 					break;
