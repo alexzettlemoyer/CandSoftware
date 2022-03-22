@@ -10,6 +10,13 @@
 #include <stdbool.h>
 #include <string.h>
 
+#define CMD_LENGTH 10
+#define CMD2_LENGTH 12
+#define CMD3_LENGTH 22
+
+#define ASSIGNMENT_LENGTH 20
+#define ID_LENGTH 4
+
 bool test( struct Employee const *emp, char const *str )
 {
 	return 0;
@@ -44,6 +51,33 @@ bool testAssignment (struct Employee const *emp, char const *str )
 	return ( strcmp( emp -> assignment, str) == 0 );
 }
 
+bool assign( bool assign, char *id, char *assignment, struct Database *database )
+{
+	bool found = 0;
+
+	if ( strlen(assignment) > ASSIGNMENT_LENGTH )
+				printf("Invalid command.1\n");
+	else if ( strlen(id) != ID_LENGTH ) 
+		printf("Invalid command.2\n");
+	else {
+		// traverse all the employees
+		for ( int i = 0; i < (*database).employeeNum; i++ ) {
+			
+			// if we found the employee with the same id
+			if ( strcmp((*database).employees[i] -> id, id) == 0 ) {
+			
+				if ( assign ==
+				(strcmp((*database).employees[i] -> assignment, "Available") == 0) ) {
+					
+					strcpy((*database).employees[i] -> assignment, assignment);
+					found = true;
+				}			
+			}
+		}
+	}	
+	return found;
+}
+
 /**
 	main method
 */
@@ -62,10 +96,72 @@ int main( int args, char *argv[] )
 		readEmployees( argv[i], database );
 	}
 	listEmployees( database, compareId, testAll, NULL);
+	printf("\n");
 	
+	int commands = 0;
 	
+	char *input;
+	char *cmd1 = (char *) malloc( CMD_LENGTH * sizeof( char ) );
+	char *cmd2 = (char *) malloc( CMD2_LENGTH * sizeof( char ) );
+	char *cmd3 = (char *) malloc( CMD3_LENGTH * sizeof( char ) );
+
+	printf("cmd> ");
+	
+	while ( (input = readLine( stdin )) != NULL ) {
+	
+		commands = sscanf( input, "%s %s %s", cmd1, cmd2, cmd3 );
 		
-	freeDataBase(database);
+		if ( strcmp( cmd1, "list" ) == 0 ) {
+			printf("list");
+			
+			switch ( commands ) {
+				case 1:
+					printf("\n");
+					listEmployees( database, compareId, testAll, NULL);
+					break;
+				case 3:
+					printf(" %s %s\n", cmd2, cmd3);
+
+					if ( strcmp(cmd2, "skill") == 0 )
+						listEmployees( database, compareId, testSkill, cmd3);
+					else if ( strcmp(cmd2, "assignment") == 0 )
+						listEmployees( database, compareId, testAssignment, cmd3);
+					else
+						printf("Invalid command.\n");
+					break;
+				default:
+					printf("Invalid command.\n");
+					break;
+			}	
+						
+		}
+		else if ( strcmp( cmd1, "assign" ) == 0 && commands == 3 ) {
+			if ( assign( true, cmd2, cmd3, database ) )
+				printf("%s %s %s\n", cmd1, cmd2, cmd3);
+			else
+				printf("Invalid command.3\n");
+		}
+		else if( strcmp( cmd1, "unassign" ) == 0 ) {
+			if ( assign( false, cmd2, "Available", database ) )
+				printf("%s %s\n", cmd1, cmd2);
+			else
+				printf("Invalid command.\n");
+		}
+		else if( strcmp( cmd1, "quit" ) == 0 ) {
+			free( input );
+			printf("quit\n");
+			break;
+		}
+		else
+			printf("Invalid command.\n");
+	
+		free( input );
+		printf("\ncmd> ");
+	}
+	free(cmd1);
+	free(cmd2);
+	free(cmd3);	
+	freeDatabase(database);
 	
 	return  0;
 }

@@ -37,7 +37,7 @@ struct Database *makeDataBase()
 /**
 	freeDataBase
 */
-void freeDataBase( struct Database *database )
+void freeDatabase( struct Database *database )
 {
 	for ( int i = 0; i < (*database).employeeNum; i++ ) {
 		free( (*database).employees[i] -> id );
@@ -72,9 +72,10 @@ void resize( struct Database *database )
 	
 }
 
-void invalid(char const *filename)
+void invalid(char const *filename, struct Database *database)
 {
 	fprintf(stderr, "Invalid employee file: %s\n", filename);
+	freeDatabase( database );
 	exit( EXIT_FAILURE );
 }
 
@@ -85,12 +86,12 @@ void checkInvalid( char const *id, char const *first, char const *last,
 	
 	// if the ID is not exactly 4 characters long
 	if ( strlen(id) != ID_LENGTH )
-		invalid( filename );
+		invalid( filename, database );
 	
 	// if the ID is not 4 digits
 	for ( int i = 0; i < ID_LENGTH; i++ ) {
 		if ( id[ i ] < '0' || id[ i ] > '9')
-			invalid( filename );
+			invalid( filename, database );
 	}
 	
 	// if the ID is the same as any other in the list
@@ -98,19 +99,18 @@ void checkInvalid( char const *id, char const *first, char const *last,
 	//	printf("%s\n", (*database).employees[i] -> id);
 
 		if ( strcmp( (*database).employees[i] -> id, id ) == 0 )
-			invalid( filename );
+			invalid( filename, database );
 	}
-//	printf("\n");
 	
 	// if any of the other fields exceed 15 characters
 	if ( strlen(first) > EXPECTED_LENGTH )
-		invalid(filename);
+		invalid(filename, database);
 		
 	if ( strlen(last) > EXPECTED_LENGTH )
-		invalid(filename);
+		invalid(filename, database);
 		
 	if ( strlen(skill) > EXPECTED_LENGTH )
-		invalid(filename);
+		invalid(filename, database);
 }
 
 /**
@@ -139,7 +139,7 @@ void readEmployees( char const *filename, struct Database *database )
 		strcpy(assignment, "Available");		
 		
 		if ( sscanf( line, "%s %s %s %s", id, first, last, skill) != 4 )
-			invalid( filename );		
+			invalid( filename, database );		
 		
 		// check if the employee being read in is valid
 		checkInvalid( id, first, last, skill, filename, database );
@@ -188,5 +188,4 @@ void listEmployees(struct Database *database, int (*compare)( void const *va, vo
 			printf("%-20s\n", (*database).employees[i] -> assignment);
 		}
 	}
-	printf("\n");
 }

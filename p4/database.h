@@ -36,4 +36,4 @@ void readEmployees( char const *filename, struct Database *database );
 void listEmployees(struct Database *database, int (*compare)( void const *va, void const *vb ),
     bool (*test)( struct Employee const *emp, char const *str ), char const *str);
 
-void freeDataBase(struct Database *database);
+void freeDatabase(struct Database *database);
