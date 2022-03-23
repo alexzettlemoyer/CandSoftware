@@ -10,13 +10,19 @@
 #include <stdbool.h>
 #include <string.h>
 
+/** Expected max length of a command */
 #define CMD_LENGTH 10
+/** Length of a command string 10 +1 to check length +1 for null termination */
 #define CMD2_LENGTH 12
-#define CMD3_LENGTH 22
-
+/** Expected max length of the assignment command */
 #define ASSIGNMENT_LENGTH 20
+/** Length of an assignment command string 20 +1 to check length +1 for null termination */
+#define CMD3_LENGTH 22
+/** Expected length of an ID */
 #define ID_LENGTH 4
 
+/**
+*/
 bool test( struct Employee const *emp, char const *str )
 {
 	return 0;
