@@ -1,6 +1,10 @@
 /**
 	@file agency.c
 	@author Alex Zettlemoyer
+	Agency program manages a database of employees
+	Provides functions for companies to contract 
+	the agency to hire employees on a temporary basis
+	Program takes 1 or more file names of employees on the command line
 */
 #include "input.h"
 #include "database.h"
@@ -20,28 +24,39 @@
 #define CMD3_LENGTH 22
 /** Expected length of an ID */
 #define ID_LENGTH 4
+/** Expected maximum number of command line arguments */
+#define MAX_COMMAND_NUM 3
 
-/**
-*/
-bool test( struct Employee const *emp, char const *str )
-{
-	return 0;
-}
 
 /**
 	compare by ID
+	converts the Employee's id to an integer and compares them
+	@param va constant void pointer to employee 1
+	@param vb constant void pointer to employee 2
+	@return the integer value of the comparison
 */
 int compareId( void const *va, void const *vb ) 
 {	
+	// cast to Employee
 	struct Employee **a = ((struct Employee **) va);
 	struct Employee **b = ((struct Employee **) vb);
 	
+	// convert to integer
 	int idA = atoi( (*a) -> id);
 	int idB = atoi( (*b) -> id);
 	
+	// return the difference
 	return idA - idB;
 }
 
+/**
+	compare by Skill
+	compares the skill of two employees
+	if the skills are equal, delegates to compareID for comparison
+	@param va constant void pointer to employee 1
+	@param vb constant void pointer to employee 2
+	@return the integer value of the String comparison
+*/
 int compareSkill( void const *va, void const *vb )
 {
 	struct Employee **a = ((struct Employee **) va);
@@ -55,21 +70,54 @@ int compareSkill( void const *va, void const *vb )
 	return compare;
 }
 
+/**
+	testAll
+	always returns true
+	( used to print all employees in database.c listEmployees function )
+	@param emp a constant employee struct
+	@param str a String
+	@param true for any employee and any string
+*/
 bool testAll( struct Employee const *emp, char const *str )
 {
 	return true;
 }
 
+/** 
+	testSkill
+	compares the given employee's skill with the skill in the str parameter
+	@param emp a constant employee struct
+	@param str a String of the skill to test for
+	@param true if emp's skill and str match, false otherwise
+*/
 bool testSkill( struct Employee const *emp, char const *str )
 {
 	return ( strcmp( emp -> skill, str) == 0 );
 }
 
+/** 
+	testAssignment
+	compares the given employee's assignment with the assignment in the str parameter
+	@param emp a constant employee struct
+	@param str a String of the assignment to test for
+	@param true if emp's assignment and str match, false otherwise
+*/
 bool testAssignment (struct Employee const *emp, char const *str )
 {
 	return ( strcmp( emp -> assignment, str) == 0 );
 }
 
+/**
+	assign method
+	works for both the assign and unassign operation
+	assign: sets the given employee ID's assignment to the assignment parameter
+	unassign: sets the given employee ID's assignment to "Available"
+	@param assign true if assign operation, false if unassign operation
+	@param id the ID to assign/unassign
+	@param assignment the new assignment or "Available" if unassigning
+	@param database to check for the given employee ID
+	@return true if the assignment was possible, false otherwise
+*/
 bool assign( bool assign, char *id, char *assignment, struct Database *database )
 {
 	bool found = 0;
@@ -83,20 +131,31 @@ bool assign( bool assign, char *id, char *assignment, struct Database *database 
 			// if we found the employee with the same id
 			if ( strcmp((*database).employees[i] -> id, id) == 0 ) {
 			
+				// if assign & "Available" or unassign and !"Available"
 				if ( assign ==
 				(strcmp((*database).employees[i] -> assignment, "Available") == 0) ) {
 					
+					// update the employee's assignment!
 					strcpy((*database).employees[i] -> assignment, assignment);
 					found = true;
 				}			
 			}
 		}
-	}	
+	}
+	// the employee wasn't found in the given list
+	// or the current assignment didn't allow for assigning/unassigning
 	return found;
 }
 
 /**
 	main method
+	reads in each list of employees from the argument vector
+	puts all the employees into a database
+	allows user commands "list", "assign", "unassign", "quit"
+	continues to prompt the user until 'quit' is input
+	@param args the number of command line arguments
+	@param argv Argument Vector containing 1 or more employee lists to read
+	@return exit status
 */
 int main( int args, char *argv[] ) 
 {
@@ -106,9 +165,10 @@ int main( int args, char *argv[] )
 		exit( EXIT_FAILURE );
 	}
 	
+	// make the database
 	struct Database *database = makeDataBase();
-	//char const *str = "Available";
 
+	// read in each list in the argument vector
 	for ( int i = 1; i < args; i++ ) {
 		readEmployees( argv[i], database );
 	}
@@ -124,23 +184,31 @@ int main( int args, char *argv[] )
 
 	printf("cmd> ");
 	
+	// while the user has input something
 	while ( (input = readLine( stdin )) != NULL ) {
 	
+		// count the number of commands
 		commands = sscanf( input, "%s %s %s %s", cmd1, cmd2, cmd3, cmd4 );
 		printf("%s\n", input);
 		
-		if ( commands > 3 )
+		// if the user input > 3 commands
+		if ( commands > MAX_COMMAND_NUM )
 			printf("Invalid command\n");
+			
+		// if the user input "list"
 		else if ( strcmp( cmd1, "list" ) == 0 ) {
 			
 			switch ( commands ) {
+				// if "list" is the only command
 				case 1:
 					listEmployees( database, compareId, testAll, NULL);
 					break;
+				// if there are 2 more commands after "list"
 				case 3:
-
+					// "list skill - "
 					if ( strcmp(cmd2, "skill") == 0 )
 						listEmployees( database, compareId, testSkill, cmd3);
+					// "list assignment - "
 					else if ( strcmp(cmd2, "assignment") == 0 )
 						listEmployees( database, compareSkill, testAssignment, cmd3);
 					else
@@ -152,14 +220,17 @@ int main( int args, char *argv[] )
 			}	
 						
 		}
-		else if ( strcmp( cmd1, "assign" ) == 0 && commands == 3 ) {
+		// if the user input "assign"
+		else if ( strcmp( cmd1, "assign" ) == 0 && commands == MAX_COMMAND_NUM ) {
 			if ( !assign( true, cmd2, cmd3, database ) )
 				printf("Invalid command\n");
 		}
+		// if the user input "unassign"
 		else if( strcmp( cmd1, "unassign" ) == 0 ) {
 			if ( !assign( false, cmd2, "Available", database ) )
 				printf("Invalid command\n");
 		}
+		// if the user input "quit"
 		else if( strcmp( cmd1, "quit" ) == 0 ) {
 			free( input );
 			break;
@@ -170,11 +241,16 @@ int main( int args, char *argv[] )
 		free( input );
 		printf("\ncmd> ");
 	}
+	
+	// free the space for the commands
 	free(cmd1);
 	free(cmd2);
 	free(cmd3);	
 	free(cmd4);
+	
+	// free the database
 	freeDatabase(database);
 	
-	return  0;
+	// exit successfully
+	return  EXIT_SUCCESS;
 }

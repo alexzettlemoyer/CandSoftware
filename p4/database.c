@@ -25,6 +25,8 @@
 #define EXPECTED_LENGTH 15
 /** Expected length of the employee ID field String */
 #define ID_LENGTH 4
+/** Expected number of Employee fields on one line in employee txt file */
+#define EXPCT_FIELDS 4
 
 /**
 	makeDatabase
@@ -193,7 +195,7 @@ void readEmployees( char const *filename, struct Database *database )
 		strcpy(assignment, "Available");		
 		
 		// check that each employee has only 4 fields
-		if ( sscanf( line, "%s %s %s %s %s", id, first, last, skill, assignment) != 4 ) {
+		if ( sscanf( line, "%s %s %s %s %s", id, first, last, skill, assignment) != EXPCT_FIELDS ) {
 			fprintf(stderr, "Invalid employee file: %s\n", filename);
 			goto invalid;		
 		}
