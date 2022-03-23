@@ -27,6 +27,8 @@
 #define ID_LENGTH 4
 /** Expected number of Employee fields on one line in employee txt file */
 #define EXPCT_FIELDS 4
+/** Factor by to resize Emplopyee array */
+#define RESIZE_FACTOR 2
 
 /**
     makeDatabase
@@ -85,7 +87,7 @@ void freeDatabase( struct Database *database )
 void resize( struct Database *database )
 {
     // double the array capacity
-    (*database).capacity *= 2;
+    (*database).capacity *= RESIZE_FACTOR;
     
     // reallocate the employee list
     (*database).employees = 

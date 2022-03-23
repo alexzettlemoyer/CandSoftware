@@ -11,6 +11,8 @@
 
 /** Initial capacity of the resizable array for input */
 #define INITIAL_CAPACITY 5
+/** Factor by to resize array */
+#define RESIZE_FACTOR 2
 
 /**
     readLine
@@ -38,7 +40,7 @@ char *readLine(FILE *fp)
         // if we filled the entire array, resize
         if ( length == size ) {
             // double the array size
-            size *= 2;
+            size *= RESIZE_FACTOR;
             // reallocate it
             s = (char *) realloc( s, size * sizeof( char *));
         }
