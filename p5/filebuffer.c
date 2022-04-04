@@ -9,6 +9,7 @@
 
 #define INITIAL_CAPACITY 3
 #define RESIZE_FACTOR 2
+#define LINE_LIMIT 78
 
 /**
 	makeFileBuffer
@@ -38,6 +39,13 @@ void freeFileBuffer( FileBuffer *buffer )
 	free( buffer );
 }
 
+/**
+	appendFileBuffer
+	adds a byte value to the end of the buffers data
+	resizes the FileBuffer's data array if necessary
+	@param buffer the FileBuffer to add to
+	@param val the byte value to append
+*/
 void appendFileBuffer( FileBuffer *buffer, byte val )
 {
 	if ( (*buffer).length == (*buffer).capacity ) {
@@ -49,6 +57,13 @@ void appendFileBuffer( FileBuffer *buffer, byte val )
 	(*buffer).length++;
 }
 
+/**
+	loadFileBuffer
+	creates a new FileBuffer
+	loads a sequence of bytes from the given file into the buffers data
+	@param filename of the File to read in
+	@return a pointer to the new loaded FileBuffer
+*/
 FileBuffer *loadFileBuffer( char const *filename )
 {
 	FILE *input = fopen( filename, "rb" );
@@ -66,28 +81,46 @@ FileBuffer *loadFileBuffer( char const *filename )
 		appendFileBuffer( buffer, b );
 	}
 	
-	// while ( (fread( (*buffer).data, sizeof( byte ), sizeof( (*buffer).data ), input)) == 3 ) {
-//   	}
-	
+	fclose( input );
 	return buffer;
 }
 
+/**
+	saveFileBuffer
+	prints the data of the FileBuffer to a binary file
+	@param buffer the FileBuffer to save
+	@param filename of the File to save to
+*/
 void saveFileBuffer( FileBuffer *buffer, char const *filename )
 {
+	FILE *output = fopen( filename, "wb" );
+	
+	if ( !output ) {
+		perror( filename );
+		exit( EXIT_FAILURE );
+	}
+	
+	for ( int i = 0; i < (*buffer).length; i++ ) {
+		fprintf( output, "%c", (*buffer).data[i] );
+	}
+	
+	fclose( output );
 }
 
-int main() 
-{
-	FileBuffer *buffer = loadFileBuffer("original-03.bin");
-	
-	printf("capacity %d\n", buffer -> capacity);
-	printf("length %d\n", buffer -> length);
-	
-	for ( int i = 0; i < (*buffer).length; i++ )
-		printf(" %d", (*buffer).data[i]);
-		
-	printf("\n");
-	
-	freeFileBuffer( buffer );
-	return 0;
-}
+// int main() 
+// {
+// 	FileBuffer *buffer = loadFileBuffer("original-03.bin");
+// 	
+// 	printf("capacity %d\n", buffer -> capacity);
+// 	printf("length %d\n", buffer -> length);
+// 	
+// 	for ( int i = 0; i < (*buffer).length; i++ )
+// 		printf(" %d", (*buffer).data[i]);
+// 		
+// 	printf("\n");
+// 	
+// 	saveFileBuffer( buffer, "output.txt");
+// 	
+// 	freeFileBuffer( buffer );
+// 	return 0;
+// }
