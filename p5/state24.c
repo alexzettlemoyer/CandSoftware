@@ -100,10 +100,10 @@ int getChars( State24 *state, char buffer[] )
 			buffer[i] = 'A' + values[i];
 		// the value should be encoded to a lowercase letter
 		else if ( values[i] <= 51 )
-			buffer[i] = 'a' + values[i];
+			buffer[i] = 'a' + values[i] - 26;
 		// the value should be encoded to a number
 		else if ( values[i] <= 61 )
-			buffer[i] = '0' + values[i];
+			buffer[i] = '0' + values[i] - 52;
 		// the value should be encoded to +
 		else if ( values[i] == 62 )
 			buffer[i] = '+';
@@ -112,28 +112,30 @@ int getChars( State24 *state, char buffer[] )
 			buffer[i] = '/';
 		
 	}
-	printf("\n");
+	
+	// reset the state to empty
+	memset( (*state).data, '\0', CAPACITY * sizeof( byte ));
+	(*state).length = 0;
 	return length;
 }
 
-int main()
-{
-	// Make a new state and initialize it.
-	State24 state;
-	initState( &state );
-
-	// Put three bytes in the state.
-	addByte( &state, 0x34 );
-	addByte( &state, 0x24 );
-	addByte( &state, 0x94 );
-	
-	printf("%d %d %d\n", state.data[0], state.data[1], state.data[2]);
-	
-	char buffer[4];
-	int match = getChars( &state, buffer);
-	
-	printf("%c %c %c %c\n", buffer[0], buffer[1], buffer[2], buffer[3]);
-	printf("%d\n", match);
-	
-	return 0;
-}
+// int main()
+// {
+// 	// Make a new state and initialize it.
+// 	State24 state;
+// 	initState( &state );
+// 
+// 	// Put three bytes in the state.
+// 	addByte( &state, 0xE3 );
+//   	addByte( &state, 0x07 );
+// 	
+// 	printf("%d %d %d\n", state.data[0], state.data[1], state.data[2]);
+// 	
+// 	char buffer[4];
+// 	int match = getChars( &state, buffer);
+// 	
+// 	printf("%c %c %c %c\n", buffer[0], buffer[1], buffer[2], buffer[3]);
+// 	printf("%d\n", match);
+// 	
+// 	return 0;
+// }
