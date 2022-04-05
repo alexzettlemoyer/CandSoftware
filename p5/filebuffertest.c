@@ -9,6 +9,9 @@ int main()
 {
   // Make an empty buffer.
   FileBuffer *buffer = makeFileBuffer();
+  
+  assert( buffer->length == 0 );
+  assert( buffer->capacity == 3 );
 
   // Add some bytes to the buffer.
   appendFileBuffer( buffer, 0x25 );
@@ -26,6 +29,9 @@ int main()
   assert( buffer->data[ 3 ] == 0x00 );
   assert( buffer->data[ 4 ] == 0x1A );
   assert( buffer->data[ 5 ] == 0x9B );
+  
+  assert( buffer->length == 6 );
+  assert( buffer->capacity == 6 );
 
   // Write the buffer out to a file.
   saveFileBuffer( buffer, "output.bin" );

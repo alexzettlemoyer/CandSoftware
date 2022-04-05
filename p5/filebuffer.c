@@ -7,9 +7,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/** initial Capacity of the buffer array */
 #define INITIAL_CAPACITY 3
+/** resize factor for reallocating the buffer array */
 #define RESIZE_FACTOR 2
-#define LINE_LIMIT 78
 
 /**
 	makeFileBuffer
@@ -106,21 +107,3 @@ void saveFileBuffer( FileBuffer *buffer, char const *filename )
 	
 	fclose( output );
 }
-
-// int main() 
-// {
-// 	FileBuffer *buffer = loadFileBuffer("original-03.bin");
-// 	
-// 	printf("capacity %d\n", buffer -> capacity);
-// 	printf("length %d\n", buffer -> length);
-// 	
-// 	for ( int i = 0; i < (*buffer).length; i++ )
-// 		printf(" %d", (*buffer).data[i]);
-// 		
-// 	printf("\n");
-// 	
-// 	saveFileBuffer( buffer, "output.txt");
-// 	
-// 	freeFileBuffer( buffer );
-// 	return 0;
-// }

@@ -23,5 +23,3 @@ typedef struct {
 } FileBuffer;
 
 #endif
-
-

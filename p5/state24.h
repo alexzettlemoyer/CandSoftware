@@ -10,8 +10,10 @@
 #include "filebuffer.h"
 
 typedef struct {
-  // Defined by you.
-  // ...
+
+	byte *data;
+	int length;
+
 } State24;
 
 #endif
