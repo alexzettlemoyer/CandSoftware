@@ -98,6 +98,7 @@ void saveFileBuffer( FileBuffer *buffer, char const *filename )
 	
 	if ( !output ) {
 		perror( filename );
+		freeFileBuffer( buffer );
 		exit( EXIT_FAILURE );
 	}
 	

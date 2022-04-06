@@ -9,12 +9,9 @@
 #include <stdio.h>
 #include <string.h>
 
-/** capacity of the State24 data array of bytes = 24 bits */
-#define CAPACITY 3
 
 void initState( State24 *state )
 {
-	(*state).data = (byte *) malloc( CAPACITY * sizeof( byte ));
 	memset( (*state).data, '\0', CAPACITY * sizeof( byte ));
 	(*state).length = 0;
 	(*state).bitlength = 0;

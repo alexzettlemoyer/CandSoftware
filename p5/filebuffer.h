@@ -23,3 +23,9 @@ typedef struct {
 } FileBuffer;
 
 #endif
+
+FileBuffer *loadFileBuffer( char const *filename );
+
+void freeFileBuffer( FileBuffer *buffer );
+
+void saveFileBuffer( FileBuffer *buffer, char const *filename );
