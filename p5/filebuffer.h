@@ -24,8 +24,12 @@ typedef struct {
 
 #endif
 
+FileBuffer *makeFileBuffer();
+
 FileBuffer *loadFileBuffer( char const *filename );
 
 void freeFileBuffer( FileBuffer *buffer );
+
+void appendFileBuffer( FileBuffer *buffer, byte val );
 
 void saveFileBuffer( FileBuffer *buffer, char const *filename );

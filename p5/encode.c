@@ -63,7 +63,7 @@ int main( int args, char *argv[] )
 		
 		if ( state.length == NUM_BYTES || i == (*filebuffer).length - 1 ) {
 			char buffer[ NUM_CHARS ];
-			int match = getChars( &state, buffer);
+			int match = getChars( &state, buffer );
 			
 			if ( padding ) {
 				for ( int i = match; i < NUM_CHARS; i++ ) {
@@ -86,7 +86,6 @@ int main( int args, char *argv[] )
 	
 	fprintf( output, "\n" );
 
-	
 	freeFileBuffer( filebuffer );
 	exit( EXIT_SUCCESS );
 }

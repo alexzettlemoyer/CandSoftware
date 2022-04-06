@@ -102,6 +102,8 @@ void saveFileBuffer( FileBuffer *buffer, char const *filename )
 		exit( EXIT_FAILURE );
 	}
 	
+	//fwrite( buffer, 1, (*buffer).length, output);
+	
 	for ( int i = 0; i < (*buffer).length; i++ ) {
 		fprintf( output, "%c", (*buffer).data[i] );
 	}
