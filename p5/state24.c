@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#define BYTE_SIZE 8
 
 void initState( State24 *state )
 {
@@ -32,7 +33,7 @@ void addByte( State24 *state, byte b )
 	if ( (*state).length < CAPACITY ) {
 		(*state).data[ (*state).length ] = b;
 		(*state).length++;
-		(*state).bitlength += 8;
+		(*state).bitlength += BYTE_SIZE;
 	}
 }
 
@@ -56,15 +57,14 @@ void addChar( State24 *state, char ch )
 	else
 		value = 0x3F;
 	
-		
 	
 	// if the first byte in data is empty
-	if ( !(*state).data[0] )
+	if ( (*state).bitlength < 6 )
 		(*state).data[0] = value << 2;
 		
 	// if the second byte in data is empty
-	else if ( !(*state).data[1] ) {
-		
+	else if ( (*state).bitlength < 12) {
+
 		// append the 2 high-order bits of value to the first byte
 		(*state).data[0] = (*state).data[0] ^ ( value >> 4 );
 		// set the 4 low-order bits of value to the 4 high-order bits of the second byte
@@ -72,7 +72,7 @@ void addChar( State24 *state, char ch )
 	}
 	
 	// if the third byte in data is empty
-	else if ( !(*state).data[2] ){
+	else if ( (*state).bitlength < 18){
 			
 		// append the 4 high-order bits of value to the second byte
 		(*state).data[1] = (*state).data[1] ^ ( value >> 2 );
@@ -86,11 +86,12 @@ void addChar( State24 *state, char ch )
 		(*state).data[2] = (*state).data[2] ^ ( value & 0x3F );
 	
 	(*state).bitlength += 6;
+	(*state).length++;
 }
 
 int getBytes( State24 *state, byte buffer[] )
 {
-	int length = (*state).bitlength / 8;
+	int length = (*state).bitlength / BYTE_SIZE;
 	
 	for ( int i = 0; i < length; i++ ) {
 	
@@ -111,7 +112,7 @@ int getChars( State24 *state, char buffer[] )
 	byte values[4];
 	
 	// if the first data byte is not empty
-	if ( (*state).data[0] ) {
+	if ( (*state).bitlength >= 8 ) {
 	
 		// get the 6 high-order bits of the first data byte
 		values[0] = (*state).data[0] >> 2;
@@ -127,8 +128,8 @@ int getChars( State24 *state, char buffer[] )
 	}
 	
 	// if the second data byte is filled
-	if ( (*state).data[1] ) {
-	
+	if ( (*state).bitlength >= 16 ) {
+
 		// 00111100 where 1111 represent the 4 low-order bits from second data byte
 		byte lastFour2 = ((*state).data[1] & 0x0F) << 2;
 		// get the 2 high-order bits of the third data byte
@@ -140,7 +141,7 @@ int getChars( State24 *state, char buffer[] )
 	}
 	
 	// if the third data byte is filled
-	if ( (*state).data[2] ) {
+	if ( (*state).bitlength == 24 ) {
 	
 		// get the 6 low-order bits from the third data byte
 		values[3] = (*state).data[2] & 0x3F;
@@ -157,7 +158,7 @@ int getChars( State24 *state, char buffer[] )
 		else if ( values[i] < 0x34 )
 			buffer[i] = 'a' + values[i] - 0x1A;
 		// the value should be encoded to a number
-		else if ( values[i] < 0x3D )
+		else if ( values[i] < 0x3E )
 			buffer[i] = '0' + values[i] - 0x34;
 		// the value should be encoded to +
 		else if ( values[i] == 0x3E )
@@ -175,46 +176,36 @@ int getChars( State24 *state, char buffer[] )
 	return length;
 }
 
-// int main()
+// int main() 
 // {
-// 	// Make a new state and initialize it.
 // 	State24 state;
 // 	initState( &state );
-// 		
-// 	// Try adding 24 bits as 4 characters.
 // 	
-// 	addChar( &state, '7' );
-//    	printf("1: %d %d %d\n", state.data[0], state.data[1], state.data[2]);
-// 
-//   	addChar( &state, 'B' );
-//   	printf("2: %d %d %d\n", state.data[0], state.data[1], state.data[2]);
-//   	addChar( &state, '+' );
-//   	printf("3: %d %d %d\n", state.data[0], state.data[1], state.data[2]);
-// 
-//   	// addChar( &state, 'C' );
-// //   	printf("1: %d %d %d\n", state.data[0], state.data[1], state.data[2]);
-// //   	addChar( &state, 'G' );
-// //   	printf("2: %d %d %d\n", state.data[0], state.data[1], state.data[2]);
-// //   	addChar( &state, '9' );
-// //   	printf("3: %d %d %d\n", state.data[0], state.data[1], state.data[2]);
-// //   	addChar( &state, 'g' );
-// //   	printf("4: %d %d %d\n", state.data[0], state.data[1], state.data[2]);
+// 	addByte( &state, 0xFB );
+// 	addByte( &state, 0xBC );
+// 	addByte( &state, 0x0A );
 // 
 // 
-// 	// Put three bytes in the state.
-//  //  	addByte( &state, 0xE3 );
-// //   	addByte( &state, 0x07 );
-// 	
-// 	printf("%d %d %d\n", state.data[0], state.data[1], state.data[2]);
-// 	
-// 	//char buffer[4];
-// 	byte bBuffer[3];
-// 	//int match = getChars( &state, buffer);
-// 	int match = getBytes( &state, bBuffer);
-// 	
-// 	//printf("%c %c %c %c\n", buffer[0], buffer[1], buffer[2], buffer[3]);
-// 	printf("%d %d %d\n", bBuffer[0], bBuffer[1], bBuffer[2]);
-// 	printf("%d\n", match);
-// 	
+// // 	addChar( &state, '+' );
+// //   	addChar( &state, '7' );
+// //   	addChar( &state, 'w' );
+// //   	addChar( &state, 'K' );
+// 
+//   //	printf("%d %d %d\n", state.data[0], state.data[1], state.data[2]);
+//   	
+//   	printf("length    %d\n", state.length);
+//   	printf("bitlength %d\n", state.bitlength);
+//   	
+//   	char buffer[4];
+//   	//byte bBuffer[3];
+//   	//int match = getBytes( &state, bBuffer );
+//   	int match = getChars( &state, buffer );
+//   	
+//   	for ( int i = 0; i < match; i++ ) {
+//   		//printf("%d ", bBuffer[i]);
+//   		printf( "%d: %d %c \n", i, buffer[i], buffer[i] );
+//   	}
+//   	printf("\n");
+// 
 // 	return 0;
 // }

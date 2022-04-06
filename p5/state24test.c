@@ -130,5 +130,7 @@ int main()
   assert( getBytes( &state, byteBuffer ) == 1 );
   assert( byteBuffer[ 0 ] == 0xFC );
   
+  ///////////////////////////////////////////////
+  
   return EXIT_SUCCESS;
 }
