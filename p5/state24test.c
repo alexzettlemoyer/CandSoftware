@@ -33,17 +33,17 @@ int main()
   State24 state;
   initState( &state );
 
- //  // Put three bytes in the state.
-//   addByte( &state, 0x75 );
-//   addByte( &state, 0xAD );
-//   addByte( &state, 0x39 );
-// 
-//   // Make sure we get those same bytes back.
-//   byte byteBuffer[ 3 ];
-//   assert( getBytes( &state, byteBuffer ) == 3 );
-//   assert( byteBuffer[ 0 ] ==  0x75 );
-//   assert( byteBuffer[ 1 ] ==  0xAD );
-//   assert( byteBuffer[ 2 ] ==  0x39 );
+  // Put three bytes in the state.
+  addByte( &state, 0x75 );
+  addByte( &state, 0xAD );
+  addByte( &state, 0x39 );
+
+  // Make sure we get those same bytes back.
+  byte byteBuffer[ 3 ];
+  assert( getBytes( &state, byteBuffer ) == 3 );
+  assert( byteBuffer[ 0 ] ==  0x75 );
+  assert( byteBuffer[ 1 ] ==  0xAD );
+  assert( byteBuffer[ 2 ] ==  0x39 );
   
   // We don't have to reset the state of the buffer.  That should
   // have happened when we called getBytes().
@@ -54,6 +54,7 @@ int main()
   addByte( &state, 0x5B );
   addByte( &state, 0x26 );
   addByte( &state, 0xE8 );
+  assert( state.bitlength == 24 );
 
   // Then extract them as four characters.  It's 5 elements in case the
   // the implementation of getChars() adds null termination.
@@ -63,26 +64,29 @@ int main()
   assert( charBuffer[ 1 ] ==  'y' );
   assert( charBuffer[ 2 ] ==  'b' );
   assert( charBuffer[ 3 ] ==  'o' );
+  assert( state.bitlength == 0 );
 
   ///////////////////////////////////////////////
   
-//   // Try adding 24 bits as 4 characters.
-//   addChar( &state, 'C' );
-//   addChar( &state, 'G' );
-//   addChar( &state, '9' );
-//   addChar( &state, 'g' );
-// 
-//   // Then extract them as bytes.
-//   assert( getBytes( &state, byteBuffer ) == 3 );
-//   assert( byteBuffer[ 0 ] == 0x08 );
-//   assert( byteBuffer[ 1 ] == 0x6F );
-//   assert( byteBuffer[ 2 ] == 0x60 );
+  // Try adding 24 bits as 4 characters.
+  addChar( &state, 'C' );
+  addChar( &state, 'G' );
+  addChar( &state, '9' );
+  addChar( &state, 'g' );
+  assert( state.bitlength == 24 );
+
+  // Then extract them as bytes.
+  assert( getBytes( &state, byteBuffer ) == 3 );
+  assert( byteBuffer[ 0 ] == 0x08 );
+  assert( byteBuffer[ 1 ] == 0x6F );
+  assert( byteBuffer[ 2 ] == 0x60 );
   
   ///////////////////////////////////////////////
   
   // Try adding 16 bits as 2 bytes
   addByte( &state, 0xE3 );
   addByte( &state, 0x07 );
+  assert( state.bitlength == 16 );
 
   // We should get 3 characters from this.
   assert( getChars( &state, charBuffer ) == 3 );
@@ -92,35 +96,39 @@ int main()
 
   ///////////////////////////////////////////////
   
-//   // Try adding 18 bits as 3 characters.
-//   addChar( &state, '7' );
-//   addChar( &state, 'B' );
-//   addChar( &state, '+' );
-// 
-//   // We should get 2 bytes from this.
-//   assert( getBytes( &state, byteBuffer ) == 2 );
-//   assert( byteBuffer[ 0 ] == 0xEC );
-//   assert( byteBuffer[ 1 ] == 0x1F );
+  // Try adding 18 bits as 3 characters.
+  addChar( &state, '7' );
+  addChar( &state, 'B' );
+  addChar( &state, '+' );
+  assert( state.bitlength == 18 );
+
+  // We should get 2 bytes from this.
+  assert( getBytes( &state, byteBuffer ) == 2 );
+  assert( byteBuffer[ 0 ] == 0xEC );
+  assert( byteBuffer[ 1 ] == 0x1F );
   
   ///////////////////////////////////////////////
   
   // Try adding 8 bits as 1 byte
   addByte( &state, 0x4E );
+  assert( state.bitlength == 8 );
   
   // We should get 2 characters from this.
   assert( getChars( &state, charBuffer ) == 2 );
   assert( charBuffer[ 0 ] ==  'T' );
   assert( charBuffer[ 1 ] ==  'g' );
+  assert( state.bitlength == 0 );
 
   ///////////////////////////////////////////////
   
   // Try adding 12 bits as 2 characters.
   addChar( &state, '/' );
   addChar( &state, 'M' );
+  assert( state.bitlength == 12 );
 
- //  // We should get 1 byte from this.
-//   assert( getBytes( &state, byteBuffer ) == 1 );
-//   assert( byteBuffer[ 0 ] == 0xFC );
+  // We should get 1 byte from this.
+  assert( getBytes( &state, byteBuffer ) == 1 );
+  assert( byteBuffer[ 0 ] == 0xFC );
   
   return EXIT_SUCCESS;
 }

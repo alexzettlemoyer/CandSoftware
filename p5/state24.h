@@ -13,6 +13,7 @@ typedef struct {
 
 	byte *data;
 	int length;
+	int bitlength;
 
 } State24;
 
