@@ -1,3 +1,5 @@
+all: encode decode
+
 encode: encode.o state24.o filebuffer.o
 	gcc encode.o state24.o filebuffer.o -o encode
 
