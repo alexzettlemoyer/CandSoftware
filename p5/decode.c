@@ -86,5 +86,6 @@ int main( int args, char *argv[] )
 	saveFileBuffer( filebuffer, outputfile );
 		
 	freeFileBuffer( filebuffer );
+	fclose( input );
 	exit( EXIT_SUCCESS );
 }

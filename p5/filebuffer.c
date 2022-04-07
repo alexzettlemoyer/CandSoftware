@@ -103,10 +103,11 @@ void saveFileBuffer( FileBuffer *buffer, char const *filename )
 	}
 	
 	//fwrite( buffer, 1, (*buffer).length, output);
+	fwrite( (*buffer).data, 1, (*buffer).length, output);
 	
-	for ( int i = 0; i < (*buffer).length; i++ ) {
-		fprintf( output, "%c", (*buffer).data[i] );
-	}
+// 	for ( int i = 0; i < (*buffer).length; i++ ) {
+// 		fprintf( output, "%c", (*buffer).data[i] );
+// 	}
 	
 	fclose( output );
 }
