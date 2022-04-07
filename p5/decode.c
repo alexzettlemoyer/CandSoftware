@@ -12,6 +12,7 @@
 
 #define NUM_BITS 24
 #define NUM_BYTES 3
+#define ARG_NUM 3
 
 void invalidFile( FileBuffer *fb )
 {
@@ -22,7 +23,7 @@ void invalidFile( FileBuffer *fb )
 
 int main( int args, char *argv[] )
 {
-	if ( args != 3 ) {
+	if ( args != ARG_NUM ) {
 		printf("usage: decode <input-file> <output-file>\n");
 		exit( EXIT_FAILURE );
 	}
@@ -58,9 +59,7 @@ int main( int args, char *argv[] )
 			if ( currentChar == '=' )
 				equals = true;		
 		}
-		
-		//printf("length %d\n", state.bitlength);
-		
+				
 		// if an encoding character is following a =
 		if ( equals && currentChar != '=' && !isspace( currentChar ))
 			invalidFile( filebuffer );
@@ -75,6 +74,7 @@ int main( int args, char *argv[] )
 		}
 	}
 	
+	// empty out any remaining bytes in the state
 	if ( state.bitlength > 0 ) {
 			
 		match = getBytes( &state, buffer );
@@ -83,6 +83,8 @@ int main( int args, char *argv[] )
 		for ( int m = 0; m < match; m++ )
 			appendFileBuffer( filebuffer, buffer[m] );
 	}
+	
+	// save the filebuffer to the output file
 	saveFileBuffer( filebuffer, outputfile );
 		
 	freeFileBuffer( filebuffer );
