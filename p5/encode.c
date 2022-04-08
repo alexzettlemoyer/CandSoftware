@@ -24,6 +24,8 @@
 #define NUM_CHARS 4
 /** number of bytes in the state */
 #define NUM_BYTES 3
+/** expected number of command line arguments */
+#define ARG_NUM 3
 
 /**
     starts the program
@@ -40,7 +42,7 @@ int main( int args, char *argv[] )
     bool lineBreaks = true;
     
     // not enough command line arguments
-    if ( args < 3 ) {
+    if ( args < ARG_NUM ) {
         fprintf( stderr, "usage: encode [-b] [-p] <input-file> <output-file>\n");
         exit( EXIT_FAILURE );
     }
