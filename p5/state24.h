@@ -1,4 +1,6 @@
 /**
+	@file state24.h
+	@author Alex Zettlemoyer
  */
 
 #ifndef _STATE64_H_
