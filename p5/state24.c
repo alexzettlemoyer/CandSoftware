@@ -181,29 +181,24 @@ int getChars( State24 *state, char buffer[] )
 // 	State24 state;
 // 	initState( &state );
 // 	
-// 	addByte( &state, 0xFB );
-// 	addByte( &state, 0xBC );
-// 	addByte( &state, 0x0A );
+// // 	addByte( &state, 0xFB );
+// // 	addByte( &state, 0xBC );
+// // 	addByte( &state, 0x0A );
 // 
 // 
-// // 	addChar( &state, '+' );
-// //   	addChar( &state, '7' );
-// //   	addChar( &state, 'w' );
-// //   	addChar( &state, 'K' );
-// 
-//   //	printf("%d %d %d\n", state.data[0], state.data[1], state.data[2]);
+// 	addChar( &state, 's' );
+//   	addChar( &state, 'G' );
+//   	addChar( &state, 'o' );
+//   	addChar( &state, 'A' );
 //   	
-//   	printf("length    %d\n", state.length);
-//   	printf("bitlength %d\n", state.bitlength);
-//   	
-//   	char buffer[4];
-//   	//byte bBuffer[3];
-//   	//int match = getBytes( &state, bBuffer );
-//   	int match = getChars( &state, buffer );
+//   	//char buffer[4];
+//   	byte bBuffer[3];
+//   	int match = getBytes( &state, bBuffer );
+//   	//int match = getChars( &state, buffer );
 //   	
 //   	for ( int i = 0; i < match; i++ ) {
-//   		//printf("%d ", bBuffer[i]);
-//   		printf( "%d: %d %c \n", i, buffer[i], buffer[i] );
+//   		printf("%d ", bBuffer[i]);
+//   		//printf( "%d: %d %c \n", i, buffer[i], buffer[i] );
 //   	}
 //   	printf("\n");
 // 

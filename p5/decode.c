@@ -1,92 +1,90 @@
 /**
-	@file decode
+	@file decode.c
 	@author Alex Zettlemoyer
 */
 #include "state24.h"
 #include "filebuffer.h"
 
 #include <stdlib.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <string.h>
+#include <stdbool.h>
 
-#define NUM_BITS 24
-#define NUM_BYTES 3
+
 #define ARG_NUM 3
 
-void invalidFile( FileBuffer *fb )
+void invalidFile( FILE *file, FileBuffer *fb )
 {
 	fprintf( stderr, "Invalid input file\n");
 	freeFileBuffer( fb );
+	fclose( file );
 	exit( EXIT_FAILURE );
 }
 
-int main( int args, char *argv[] )
+int main( int args, char *argv[] ) 
 {
+	
 	if ( args != ARG_NUM ) {
-		printf("usage: decode <input-file> <output-file>\n");
+		printf( "usage: decode <input-file> <output-file>\n" );
 		exit( EXIT_FAILURE );
 	}
 	
 	char *inputfile = argv[ 1 ];
 	char *outputfile = argv[ 2 ];
 	
-	FILE *input = fopen( inputfile, "r");
 	
+	FILE *input = fopen( inputfile, "r" );
 	if ( !input ) {
 		perror( inputfile );
 		exit( EXIT_FAILURE );
 	}
-	
-	bool equals = false;
 	
 	FileBuffer *filebuffer = makeFileBuffer();
 	
 	State24 state;
 	initState( &state );
 	
-	int match;
-	byte buffer[ NUM_BYTES ];
 	
-	char currentChar = ' ';
-	while( fscanf( input, "%c", &currentChar ) == 1 && currentChar != EOF ) {
+	char ch = '\0';
+	//char nextCh = '\0';
+	bool equals = false;
+	
+	while ( fscanf( input, "%c", &ch ) != EOF ) {
+			
+		if ( validChar(ch) )
+			addChar( &state, ch );
+		else if ( ch == '=' )
+			equals = true; 
+		else if ( !isspace( ch ) )
+			invalidFile( input, filebuffer );
 		
-		if ( validChar( currentChar ))
-			addChar( &state, currentChar );
-		else {
-			if ( currentChar != '=' && !isspace( currentChar ))
-				invalidFile( filebuffer );
-			if ( currentChar == '=' )
-				equals = true;		
-		}
-				
-		// if an encoding character is following a =
-		if ( equals && currentChar != '=' && !isspace( currentChar ))
-			invalidFile( filebuffer );
+		if ( equals && ch != '=' && !isspace( ch ) )
+			invalidFile( input, filebuffer );
+								
+		if ( state.bitlength == 24 ) {
+			byte bytes[ 3 ];
+			memset( bytes, '\0', 3 * sizeof( byte ));
 			
-		if ( state.bitlength == NUM_BITS ) {
+			int length = getBytes( &state, bytes );
 			
-			match = getBytes( &state, buffer );
-			//printf("%d\n", match);
-			
-			for ( int m = 0; m < match; m++ )
-				appendFileBuffer( filebuffer, buffer[m] );
+			for ( int m = 0; m < length; m++ )
+				appendFileBuffer( filebuffer, bytes[ m ]);
 		}
 	}
 	
-	// empty out any remaining bytes in the state
 	if ( state.bitlength > 0 ) {
+		byte bytes[ 3 ];
+		memset( bytes, '\0', 3 * sizeof( byte ));
 			
-		match = getBytes( &state, buffer );
-		//printf("%d\n", match);
+		int length = getBytes( &state, bytes );
 			
-		for ( int m = 0; m < match; m++ )
-			appendFileBuffer( filebuffer, buffer[m] );
+		for ( int m = 0; m < length; m++ )
+			appendFileBuffer( filebuffer, bytes[ m ]);
 	}
 	
-	// save the filebuffer to the output file
 	saveFileBuffer( filebuffer, outputfile );
-		
+	
 	freeFileBuffer( filebuffer );
 	fclose( input );
 	exit( EXIT_SUCCESS );
