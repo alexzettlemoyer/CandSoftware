@@ -33,6 +33,10 @@ int mapSize( Map *m );
 */
 VType *mapGet( Map *m, VType *key );
 
+void mapSet( Map *m, VType *key, VType *val );
+
+bool mapRemove( Map *m, VType *key );
+
 /** Free all the memory used to store a map, including all the
     memory in its key/value pairs.
     @param m The map to free.

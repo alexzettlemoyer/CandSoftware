@@ -42,11 +42,13 @@ static bool equals( struct VTypeStruct const *a, struct VTypeStruct const *b )
 static unsigned int hash( struct VTypeStruct const *b )
 {
 	Text const *this = ( Text const *) b;
+	// start at 1 to skip over first quote
 	int i = 1;
 	unsigned int hash = 0;
 	
 	char *value = this -> str;
 	
+	// end at length - 1 to skip last quote
 	while ( i != this -> length - 1) {
 		if ( value[ i ] != '\"') {
 			hash += value [ i++ ];
