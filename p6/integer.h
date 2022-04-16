@@ -28,7 +28,8 @@ typedef struct {
   int val;
 } Integer;
 
-/** Make an instance of Integer holding a value parsed from the init string.
+/** 
+	Make an instance of Integer holding a value parsed from the init string.
     @param init String containing the initializaiton value as text.
     @param n Optional return for the number of characters used from init.
     @return pointer to the new VType instance.
