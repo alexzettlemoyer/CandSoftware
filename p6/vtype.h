@@ -21,8 +21,7 @@ typedef struct VTypeStruct {
       containing this function)
       @param b Poitner to the right-hand value to compare.
       @return True if the values are equal. */
-  bool (*equals)( struct VTypeStruct const *a,
-                  struct VTypeStruct const *b );
+  bool (*equals)( struct VTypeStruct const *a, struct VTypeStruct const *b );
 
   /** Compute a hash function for this value.
       @param v Pointer to the inststance this funciton is called for.
@@ -32,6 +31,7 @@ typedef struct VTypeStruct {
   /** Pointer to a function that frees memory for this instance.
       @param v Pointer to the node containing the value to print. */
   void (*destroy)( struct VTypeStruct *v );
+
 } VType;
 
 #endif

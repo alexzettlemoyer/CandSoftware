@@ -15,8 +15,7 @@ typedef struct {
   void (*print)( struct VTypeStruct const *v );
 
   /** Inherited from VType */
-  bool (*equals)( struct VTypeStruct const *a,
-                  struct VTypeStruct const *b );
+  bool (*equals)( struct VTypeStruct const *a, struct VTypeStruct const *b );
 
   /** Inherited from VType */
   unsigned int (*hash)( struct VTypeStruct const *b );

@@ -112,6 +112,14 @@ VType *parseText( char const *init, int *n )
             this -> str = (char *) realloc( this -> str, size * sizeof( char *));
         }
 	}
+	
+	// if we filled the entire array, resize
+    if ( count == size ) {
+	     // double the array size
+    	size *= RESIZE_FACTOR;
+        // reallocate it
+        this -> str = (char *) realloc( this -> str, size * sizeof( char *));
+    }
 	this -> str[ count ] = '\0';
 
   	// Fill in the end pointer, if the caller asked for it.

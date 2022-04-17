@@ -17,7 +17,7 @@ typedef struct NodeStruct {
   	VType *key;
   
   	/** Pointer to the value part of the key / value pair. */
-  	VType *val;
+  	VType *value;
   
   	/** Pointer to the next node at the same element of this table. */
   	struct NodeStruct *next;
@@ -42,6 +42,9 @@ Map *makeMap( int len )
   	m -> size = 0;
 
   	m -> table = (Node **) malloc( len * sizeof( Node *));
+  	for ( int i = 0; i < len; i++ )
+  		(m -> table)[ i ] = NULL;
+  	
   	m -> size = 0;
   	m -> tlen = len;
   
@@ -50,11 +53,44 @@ Map *makeMap( int len )
 
 int mapSize( Map *m )
 {
-  	return m->size;
+  	return m -> size;
 }
 
 void mapSet( Map *m, VType *key, VType *val )
 {
+	unsigned int hash = key -> hash( key );
+	int index = hash % (*m).tlen;
+		
+	Node *node = (Node *) malloc( sizeof( Node ));
+	node -> key = key;
+	node -> value = val;
+	node -> next = NULL;
+		
+	if ( !( m -> table )[ index ])
+		( m -> table)[ index ] = node; 
+	else {
+		Node *current = ( m -> table )[ index ];
+		
+		if ( key -> equals( current -> key, key) ) {
+			// free the parameter key because we're keeping the current key
+			key -> destroy( key );
+			// free the old value since we're overriding it
+			current -> value -> destroy( current -> value );
+			// free the node we made to insert
+			free( node );
+			// set the new value
+			current -> value = val;
+			return;
+		}
+		
+		// traverse to first NULL node
+		while ( current -> next )
+			current = current -> next;
+		
+		// insert the node last in the list
+		current -> next = node;
+	}
+	(*m).size ++;
 }
 
 VType *mapGet( Map *m, VType *key )
@@ -62,36 +98,106 @@ VType *mapGet( Map *m, VType *key )
   	
   	unsigned int hash = key -> hash( key );
   	int index = hash % (*m).tlen;
-  	Node *current = NULL;
   	
   	if ( !( m -> table )[ index ] )
   		return NULL;
   	else {
-  		current = ( m -> table )[ index ];
+  		// start from first node in the index list
+  		Node *current = ( m -> table )[ index ];
   		
+  		// while the current node isn't null
   		while ( current ) {
+  			// if the current key matches
   			if ( key -> equals( current -> key, key ) )
-  				return current -> key;
+  				return current -> value;
   			
+  			// move to the next node if it's not null
   			if ( current -> next )
   				current = current -> next;
   			else
   				return NULL;
   		}
   	}
-
   	return NULL;
+}
+
+void freeNode( Node *node )
+{
+	// free the key and value
+	node -> key -> destroy( node -> key );
+	node -> value -> destroy( node -> value );
+				
+	// free the node
+	free( node );
 }
 
 bool mapRemove( Map *m, VType *key )
 {
+	unsigned int hash = key -> hash( key );
+	int index = hash % (*m).tlen;
+	
+	if ( !( m -> table)[ index ] )
+		return false;
+	else {
+		Node *current = ( m -> table )[ index ];
+		
+		// special case for first node in the list
+		if ( key -> equals( current -> key, key) ) {
+		
+			// store the node we're removing so we can free it
+			Node *removed = current;
+			
+			// set first node in table to removed.next
+			m -> table[ index ] = removed -> next;
+			
+			// free the node
+			freeNode( removed );
+			
+			(*m).size --;
+			return true;
+		}
+		
+		while ( current -> next ) {
+			
+			// if the next Node has the key to remove
+			if ( key -> equals(current -> next -> key, key) ) {
+			
+				// store the node we're removing so we can free it
+				Node *removed = current -> next;
+				
+				// set current.next to removed.next
+				current -> next = removed -> next;
+				
+				// free the node
+				freeNode( removed );
+				
+				(*m).size --;
+				return true;
+			}
+			
+			current = current -> next;
+		}
+	}
 	return false;
 }
 
 void freeMap( Map *m )
 {
-  	// Complete the implementation
-  	// ...
-  
+	// for each 'bucket' in the map table
+  	for ( int i = 0; i < (*m).tlen; i++ ) {
+  	
+  		Node *removed = ( m -> table )[ i ];
+  		if ( removed ) {
+  			Node *current = removed -> next;
+  			freeNode( removed );
+  		
+  			while ( current ) {
+  				removed = current;
+  				current = removed -> next;
+  				freeNode( removed );
+  			}
+  		}
+  	}
+  	free( m -> table );
   	free( m );
 }
