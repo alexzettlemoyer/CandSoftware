@@ -123,7 +123,7 @@ VType *mapGet( Map *m, VType *key )
   		// while the current node isn't null
   		while ( current ) {
   			// if the current key matches
-  			if ( current -> key -> equals( current -> key, key ) )
+  			if ( current -> key -> equals( current -> key, key ))
   				return current -> value;
   			
   			// move to the next node if it's not null
@@ -157,7 +157,7 @@ bool mapRemove( Map *m, VType *key )
 		Node *current = ( m -> table )[ index ];
 		
 		// special case for first node in the list
-		if ( key -> equals( current -> key, key) ) {
+		if ( current -> key -> equals( current -> key, key )) {
 		
 			// store the node we're removing so we can free it
 			Node *removed = current;
@@ -175,7 +175,7 @@ bool mapRemove( Map *m, VType *key )
 		while ( current -> next ) {
 			
 			// if the next Node has the key to remove
-			if ( key -> equals(current -> next -> key, key) ) {
+			if ( current -> next -> key -> equals( current -> next -> key, key) ) {
 			
 				// store the node we're removing so we can free it
 				Node *removed = current -> next;
