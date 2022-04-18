@@ -13,7 +13,7 @@
 #include "map.h"
 #include "vtype.h"
 #include "integer.h"
-// #include "text.h"
+#include "text.h"
 #include "input.h"
 
 /** Maximum length for a command name. */
@@ -32,10 +32,9 @@ static VType *parseVType( char const *init, int *n )
 {
   VType *val = parseInteger( init, n );
 
-  // Add this code back when your text component is working.
-  // if ( ! val )
-  //   val = parseText( init, n );
-  //
+  if ( ! val )
+    val = parseText( init, n );
+  
   return val;
 }
 
@@ -70,6 +69,7 @@ int main()
   char *line;
   printf( "cmd> " );
   while ( ( line = readLine( stdin ) ) ) {
+  
     // Echo the command back to the user.
     printf( "%s\n", line );
 
@@ -99,6 +99,39 @@ int main()
           }
 
           // Free the key we parsed from the input.
+          k->destroy( k );
+        }
+      } else if ( strcmp( cmd, "set") == 0 ) {
+      	// Parse the key from the command
+      	VType *k = parseVType( pos, &n );
+      	
+      	if ( k ) {
+      		pos += n;
+      		// Parse the value from the command
+      		VType *v = parseVType( pos, &n );
+      		
+      		if ( v ) {
+      			pos += n;
+      			valid = true;
+      			
+      			mapSet( map, k, v );
+      		}
+      	}
+      } else if ( strcmp( cmd, "remove") == 0 ) {
+      
+		// Parse the key from the command.
+        VType *k = parseVType( pos, &n );
+        if ( k ) {
+          pos += n;
+
+          // Make sure we got a key and there's nothing extra in the command.
+          if ( blankString( pos ) ) {
+            valid = true;
+            
+            if ( !mapRemove( map, k ) )
+            	printf("Not in map\n");
+		  }
+          	// Free the key we parsed from the input.
           k->destroy( k );
         }
       } else if ( strcmp( cmd, "size" ) == 0 ) {

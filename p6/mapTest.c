@@ -95,7 +95,6 @@ int main()
   v = mapGet( map2, v20 );
   assert( alex -> equals( alex, v ));
   
-  // SEG FAULT HERE
   // Put another entry "CSC230" -> "abc"
   mapSet( map2, parseText("\"CSC230\"", NULL), parseText("\"abc\"", NULL) );
   assert( mapSize( map2 ) == 3 );
