@@ -60,7 +60,7 @@ void mapSet( Map *m, VType *key, VType *val )
 {
 	unsigned int hash = key -> hash( key );
 	int index = hash % (*m).tlen;
-		
+	
 	Node *node = (Node *) malloc( sizeof( Node ));
 	node -> key = key;
 	node -> value = val;
@@ -71,7 +71,8 @@ void mapSet( Map *m, VType *key, VType *val )
 	else {
 		Node *current = ( m -> table )[ index ];
 		
-		if ( key -> equals( current -> key, key) ) {
+		// if the current key matches the parameter key
+		if ( current -> key -> equals( current -> key, key) ) {
 			// free the parameter key because we're keeping the current key
 			key -> destroy( key );
 			// free the old value since we're overriding it
@@ -84,9 +85,23 @@ void mapSet( Map *m, VType *key, VType *val )
 		}
 		
 		// traverse to first NULL node
-		while ( current -> next )
+		while ( current -> next ) {
+			
+			// if the current key matches
+			if ( current -> key -> equals( current -> key, key) ) {
+				// free the parameter key because we're keeping the current key
+				key -> destroy( key );
+				// free the old value since we're overriding it
+				current -> value -> destroy( current -> value );
+				// free the node we made to insert
+				free( node );
+				// set the new value
+				current -> value = val;
+				return;
+			}
 			current = current -> next;
-		
+		}
+
 		// insert the node last in the list
 		current -> next = node;
 	}
@@ -108,7 +123,7 @@ VType *mapGet( Map *m, VType *key )
   		// while the current node isn't null
   		while ( current ) {
   			// if the current key matches
-  			if ( key -> equals( current -> key, key ) )
+  			if ( current -> key -> equals( current -> key, key ) )
   				return current -> value;
   			
   			// move to the next node if it's not null
