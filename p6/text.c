@@ -24,7 +24,10 @@ static void print( struct VTypeStruct const *v )
   	
   	bool escape = false;
   	int length = strlen( this -> str );
+  	
   	for ( int i = 0; i < length; i++ ) {
+  	
+  		// if the character is a backslash, the next character will be escaped
   		if ( this -> str[ i ] == '\\' && !escape) 
   			escape = true;
   		else if ( escape ) {
@@ -119,9 +122,10 @@ VType *parseText( char const *init, int *n )
 	// while the character isn't null
 	while ( sscanf( init + len, "%c", &ch) == 1 && ch != '\0') {
 	
+		// if it's a backslash the next character will be escaped
 		if ( ch == '\\' )
 			escape = true;
-		// if it's the second quote
+		// if it's the second quote and the previous character wasn't an escape
 		if ( !escape && ch == '\"' && quote ) {
 			this -> str [ count++ ] = ch;
 			len++;

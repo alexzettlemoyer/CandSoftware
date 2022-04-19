@@ -65,7 +65,6 @@ int main()
   v15->destroy( v15 );
   v20->destroy( v20 );
   
-  
   // TEST USING text
   // make some values
   VType *abc = parseText("\"abc\"", NULL);

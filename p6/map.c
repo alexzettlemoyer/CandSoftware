@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <assert.h>
 
 #include "vtype.h"
 
@@ -36,6 +37,7 @@ struct MapStruct {
   	int size;
 };
 
+// makeMap method for Map
 Map *makeMap( int len )
 {
   	Map *m = (Map *) malloc( sizeof( Map ) );
@@ -51,9 +53,32 @@ Map *makeMap( int len )
   	return m;
 }
 
+// mapSize method for Map
 int mapSize( Map *m )
 {
   	return m -> size;
+}
+
+void mapAdd( Map *m, VType *key, VType *val )
+{
+	unsigned int hash = key -> hash( key );
+	int index = hash % (*m).tlen;
+	
+	Node *node = (Node *) malloc(sizeof( Node ));
+	node -> key = key;
+	node -> value = val;
+	node -> next = NULL;
+	
+	if ( !( m -> table )[ index ])
+		( m -> table)[ index ] = node; 
+	else {
+		Node *current = ( m -> table )[ index ];
+		
+		while ( current -> next )
+			current = current -> next;
+		current -> next = node;
+	}
+	m -> size++;
 }
 
 void mapResize( Map *m )
@@ -75,14 +100,17 @@ void mapResize( Map *m )
 		
 		while ( current ) {
 			Node *oldNode = current;
-			mapSet( m, current -> key, current -> value );
+			mapAdd( m, current -> key, current -> value );
 			current = current -> next;
 			free( oldNode );
 		}
+		
 	}
+	assert( m-> size == oldLength);
 	free( oldTable );
 }
 
+// mapSet method for Map
 void mapSet( Map *m, VType *key, VType *val )
 {
 	unsigned int hash = key -> hash( key );
@@ -98,21 +126,8 @@ void mapSet( Map *m, VType *key, VType *val )
 	else {
 		Node *current = ( m -> table )[ index ];
 		
-		// if the current key matches the parameter key
-		if ( current -> key -> equals( current -> key, key) ) {
-			// free the parameter key because we're keeping the current key
-			key -> destroy( key );
-			// free the old value since we're overriding it
-			current -> value -> destroy( current -> value );
-			// free the node we made to insert
-			free( node );
-			// set the new value
-			current -> value = val;
-			return;
-		}
-		
 		// traverse to first NULL node
-		while ( current -> next ) {
+		while ( current ) {
 			
 			// if the current key matches
 			if ( current -> key -> equals( current -> key, key) ) {
@@ -126,6 +141,9 @@ void mapSet( Map *m, VType *key, VType *val )
 				current -> value = val;
 				return;
 			}
+			
+			if ( !( current -> next ))
+				break;
 			current = current -> next;
 		}
 
@@ -133,13 +151,13 @@ void mapSet( Map *m, VType *key, VType *val )
 		current -> next = node;
 	}
 	(*m).size ++;
-// 	if ( (*m).size == (*m).tlen )
-// 		mapResize( m );
+	if ( (*m).size == (*m).tlen )
+		mapResize( m );
 }
 
+// mapGet value for Map
 VType *mapGet( Map *m, VType *key )
 {
-  	
   	unsigned int hash = key -> hash( key );
   	int index = hash % (*m).tlen;
   	
@@ -175,6 +193,7 @@ void freeNode( Node *node )
 	free( node );
 }
 
+// mapRemove method for Map
 bool mapRemove( Map *m, VType *key )
 {
 	unsigned int hash = key -> hash( key );
@@ -224,6 +243,7 @@ bool mapRemove( Map *m, VType *key )
 	return false;
 }
 
+// freeMap method for map
 void freeMap( Map *m )
 {
 	// for each 'bucket' in the map table
