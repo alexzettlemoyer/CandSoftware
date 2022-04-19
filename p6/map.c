@@ -11,6 +11,9 @@
 
 #include "vtype.h"
 
+/** Factor to resize hash table */
+#define RESIZE_FACTOR 2
+
 /** Node containing a key / value pair. */
 typedef struct NodeStruct {
     /** Pointer to the key part of the key / value pair. */
@@ -107,7 +110,7 @@ void mapResize( Map *m )
     int oldLength = m -> tlen;
     
     // make a new table with double the entries
-    m -> tlen *= 2;
+    m -> tlen *= RESIZE_FACTOR;
     m -> table = ( Node ** ) malloc( m -> tlen * sizeof( Node *));
     m -> size = 0;
     
