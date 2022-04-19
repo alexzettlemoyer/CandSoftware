@@ -50,7 +50,7 @@ static bool blankString( char *str )
   while ( isspace( *str ) )
     ++str;
 
-  // Return false if we see non-whiespace before the end-of-string.
+  // Return false if we see non-whitespace before the end-of-string.
   if ( *str )
     return false;
   return true;
@@ -113,7 +113,6 @@ int main()
       		if ( v ) {
       			pos += n;
       			valid = true;
-      			
       			mapSet( map, k, v );
       		}
       	}

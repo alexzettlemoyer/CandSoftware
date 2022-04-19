@@ -56,6 +56,33 @@ int mapSize( Map *m )
   	return m -> size;
 }
 
+void mapResize( Map *m )
+{
+	// store the old table
+	Node **oldTable = m -> table;
+	int oldLength = m -> tlen;
+	
+	// make a new table with double the entries
+	m -> tlen *= 2;
+	m -> table = ( Node ** ) malloc( m -> tlen * sizeof( Node *));
+	m -> size = 0;
+	
+	for ( int i = 0; i < m -> tlen; i++ )
+		(m -> table)[ i ] = NULL;
+	
+	for ( int i = 0; i < oldLength; i++ ) {
+		Node *current = oldTable[ i ];
+		
+		while ( current ) {
+			Node *oldNode = current;
+			mapSet( m, current -> key, current -> value );
+			current = current -> next;
+			free( oldNode );
+		}
+	}
+	free( oldTable );
+}
+
 void mapSet( Map *m, VType *key, VType *val )
 {
 	unsigned int hash = key -> hash( key );
@@ -106,6 +133,8 @@ void mapSet( Map *m, VType *key, VType *val )
 		current -> next = node;
 	}
 	(*m).size ++;
+// 	if ( (*m).size == (*m).tlen )
+// 		mapResize( m );
 }
 
 VType *mapGet( Map *m, VType *key )
@@ -171,7 +200,6 @@ bool mapRemove( Map *m, VType *key )
 			(*m).size --;
 			return true;
 		}
-		
 		while ( current -> next ) {
 			
 			// if the next Node has the key to remove

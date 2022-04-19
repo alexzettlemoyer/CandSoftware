@@ -21,7 +21,35 @@ static void print( struct VTypeStruct const *v )
 {
 	// Convert the VType pointer to a Text type
   	Text const *this = (Text const *) v;
-  	printf( "%s", this -> str );
+  	
+  	bool escape = false;
+  	int length = strlen( this -> str );
+  	for ( int i = 0; i < length; i++ ) {
+  		if ( this -> str[ i ] == '\\' && !escape) 
+  			escape = true;
+  		else if ( escape ) {
+  			switch( this -> str[ i ] ) {
+  				case 'n':
+  					printf("\n");
+  					break;
+  				case 't':
+  					printf("\t");
+  					break;
+  				case '\\':
+  					printf("\\");
+  					break;
+  				case '\"':
+  					printf("\"");
+  					break;
+  				default:
+  					printf("\%c", this -> str[ i ]);
+  					break;
+  			}
+  			escape = false;
+  		}
+  		else 
+  			printf("%c", this -> str[ i ]);
+  	}
 }
 
 // equals method for Text
@@ -86,12 +114,15 @@ VType *parseText( char const *init, int *n )
   	this -> str = (char *) malloc( INITIAL_CAPACITY * sizeof(char));
   	
   	bool quote = false;
+  	bool escape = false;
 	
 	// while the character isn't null
 	while ( sscanf( init + len, "%c", &ch) == 1 && ch != '\0') {
 	
+		if ( ch == '\\' )
+			escape = true;
 		// if it's the second quote
-		if ( ch == '\"' && quote ) {
+		if ( !escape && ch == '\"' && quote ) {
 			this -> str [ count++ ] = ch;
 			len++;
 			break;
@@ -121,7 +152,7 @@ VType *parseText( char const *init, int *n )
         this -> str = (char *) realloc( this -> str, size * sizeof( char *));
     }
 	this -> str[ count ] = '\0';
-
+	
   	// Fill in the end pointer, if the caller asked for it.
   	if ( n )
     	*n = len;
