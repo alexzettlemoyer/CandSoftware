@@ -1,6 +1,6 @@
 /** 
     @file driver.c
-    @author
+    @author Alex Zettlemoyer
     Main program for the hash map program.
 */
 
@@ -18,6 +18,9 @@
 
 /** Maximum length for a command name. */
 #define MAX_CMD 10
+
+/** Initial Capacity of the resizable Hash table */
+#define INITIAL_CAPACTIY 10
 
 /** 
     Front-end for the Integer and Text parsing functions.  This tries
@@ -62,8 +65,8 @@ static bool blankString( char *str )
  */
 int main()
 {
-  // Make our map, with a 100-element table.
-  Map *map = makeMap( 100 );
+  // Make our map, with a 10-element table.
+  Map *map = makeMap( INITIAL_CAPACTIY );
 
   // Keep reading input from the user.
   char *line;
@@ -102,23 +105,23 @@ int main()
           k->destroy( k );
         }
       } else if ( strcmp( cmd, "set") == 0 ) {
-      	// Parse the key from the command
-      	VType *k = parseVType( pos, &n );
-      	
-      	if ( k ) {
-      		pos += n;
-      		// Parse the value from the command
-      		VType *v = parseVType( pos, &n );
-      		
-      		if ( v ) {
-      			pos += n;
-      			valid = true;
-      			mapSet( map, k, v );
-      		}
-      	}
+        // Parse the key from the command
+        VType *k = parseVType( pos, &n );
+        
+        if ( k ) {
+            pos += n;
+            // Parse the value from the command
+            VType *v = parseVType( pos, &n );
+            
+            if ( v ) {
+                pos += n;
+                valid = true;
+                mapSet( map, k, v );
+            }
+        }
       } else if ( strcmp( cmd, "remove") == 0 ) {
       
-		// Parse the key from the command.
+        // Parse the key from the command.
         VType *k = parseVType( pos, &n );
         if ( k ) {
           pos += n;
@@ -128,9 +131,9 @@ int main()
             valid = true;
             
             if ( !mapRemove( map, k ) )
-            	printf("Not in map\n");
-		  }
-          	// Free the key we parsed from the input.
+                printf("Not in map\n");
+          }
+            // Free the key we parsed from the input.
           k->destroy( k );
         }
       } else if ( strcmp( cmd, "size" ) == 0 ) {
