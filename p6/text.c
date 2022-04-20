@@ -120,8 +120,8 @@ VType *parseText( char const *init, int *n )
     // while the character isn't null
     while ( sscanf( init + len, "%c", &ch) == 1 && ch != '\0') {
     
-        // if we filled the entire array, resize
-        if ( count == size ) {
+        // if we are about to fill the entire array, resize
+        if ( count + 1 == size ) {
             // double the array size
             size *= RESIZE_FACTOR;
             // reallocate it
@@ -145,6 +145,7 @@ VType *parseText( char const *init, int *n )
             this -> str [ count++ ] = ch;
         len++;
     }
+    
     this -> str[ count ] = '\0';
     
     // Fill in the end pointer, if the caller asked for it.

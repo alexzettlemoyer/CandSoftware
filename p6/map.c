@@ -162,7 +162,7 @@ void mapSet( Map *m, VType *key, VType *val )
                 return;
             }
             
-            if ( !( current -> next ))
+            if ( !(current -> next) )
                 break;
             current = current -> next;
         }
@@ -193,11 +193,8 @@ VType *mapGet( Map *m, VType *key )
             if ( current -> key -> equals( current -> key, key ))
                 return current -> value;
             
-            // move to the next node if it's not null
-            if ( current -> next )
-                current = current -> next;
-            else
-                return NULL;
+            // move to the next node
+            current = current -> next;
         }
     }
     return NULL;
@@ -277,15 +274,10 @@ void freeMap( Map *m )
     for ( int i = 0; i < (*m).tlen; i++ ) {
     
         Node *removed = ( m -> table )[ i ];
-        if ( removed ) {
+        while ( removed ) {
             Node *current = removed -> next;
             freeNode( removed );
-        
-            while ( current ) {
-                removed = current;
-                current = removed -> next;
-                freeNode( removed );
-            }
+            removed = current;
         }
     }
     free( m -> table );
